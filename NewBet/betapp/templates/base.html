@@ -8,7 +8,8 @@
     <p>
         {% if user.username %}
         Logged user: {{ user.username }}<br>
-        <a href="{{ action }}">{{ label }}</a>
+        <a href="{{ action }}">{{ label }}</a><br>
+        <a href="{% url 'account-details' %}">Account details</a>
         {% else %}
         <a href="{{ action }}">{{ label }}</a>
         {% endif %}

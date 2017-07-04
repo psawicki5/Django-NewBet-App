@@ -28,4 +28,6 @@ urlpatterns = [
     url(r'^register/', RegisterView.as_view(), name="register"),
     url(r'^bet_fixture/(?P<id>[\d]+)', BetFixtureView.as_view(),
         name="bet-fixture"),
+    url(r'^account_details/', AccountDetailsView.as_view(),
+        name="account-details"),
 ]

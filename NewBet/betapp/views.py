@@ -30,14 +30,44 @@ class CompetitionView(View):
         return render(request, 'fixtures.html', context)
 
 
+def get_bet_course(fixture, bet):
+    if bet == 1:
+        return fixture.course_team_home_win
+    elif bet == 2:
+        return fixture.course_draw
+    elif bet == 3:
+        return fixture.course_team_away_win
+
+
 class BetFixtureView(LoginRequiredMixin, View):
     login_url = reverse_lazy('login')
 
     def get(self, request, id):
         fixture = Fixture.objects.get(id=id)
-        if fixture.result == 0:
-            pass
+        if fixture.fixture_result == 0:
+            form = BetForm
+            context = {"form": form}
+            return render(request, "bet_form.html", context)
 
+    def post(self, request, id):
+        fixture = Fixture.objects.get(id=id)
+        user = request.user
+        app_user = AppUser.objects.get(user=user)
+        form = BetForm(request.POST)
+        if form.is_valid():
+            bet_amount = form.cleaned_data['bet_amount']
+            bet = form.cleaned_data['bet']
+            bet_course = get_bet_course(fixture, bet)
+            if app_user.cash - bet_amount >= 0.0:
+                app_user.cash -= bet_amount
+                app_user.save()
+                Bet.objects.create(bet_user=app_user,
+                                   bet_amount=bet_amount,
+                                   fixture=fixture,
+                                   bet=bet,
+                                   bet_course=bet_course
+                                   )
+        return redirect(reverse_lazy('competitions'))
 
 
 class LoginView(UserPassesTestMixin, FormView):
@@ -113,3 +143,19 @@ class RegisterView(FormView):
                        }
             return render(self.request, "register_form.html", context)
         return super(RegisterView, self).form_valid(form)
+
+
+class AccountDetailsView(LoginRequiredMixin, View):
+    login_url = reverse_lazy('login')
+
+    def get(self, request):
+        user = request.user
+        app_user = AppUser.objects.get(user=user)
+        bets = Bet.objects.filter(bet_user=app_user)
+        context = {"user": user,
+                   "app_user": app_user,
+                   "bets": bets,
+                   }
+        return render(request, "my_account.html", context)
+
+
