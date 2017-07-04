@@ -28,7 +28,7 @@ class Team(models.Model):
 
 
 STATUS_TAB = ((1, "SCHEDULED"),
-              (2, "PLAYED")
+              (2, "FINISHED")
               )
 
 BET_CHOICES = ((1, 1),
@@ -40,7 +40,7 @@ BET_CHOICES = ((1, 1),
 class Fixture(models.Model):
     homeTeam = models.ForeignKey(Team, related_name='homeTeam')
     awayTeam = models.ForeignKey(Team, related_name='awayTeam')
-    status = models.IntegerField(choices=STATUS_TAB)
+    status = models.IntegerField(choices=STATUS_TAB, default=1)
     matchday = models.IntegerField()
     competition = models.ForeignKey(Competition, related_name='competition')
     date = models.DateTimeField()
