@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<ul>
+    {% for fixture in fixtures %}
+    <li>{{fixture.date}} {{ fixture.homeTeam.name }} - {{ fixture.awayTeam.name }}
+        <ol>
+            <li> Home win: {{ fixture.course_team_home_win }}</li>
+            <li> Draw: {{ fixture.course_draw }}</li>
+            <li> away win: {{ fixture.course_team_away_win }}</li>
+        </ol>
+        <a href="{% url 'bet-fixture' fixture.id %}">Bet fixture</a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NewBet</title>
+</head>
+<header class="page-header">
+    <p>
+        {% if user.username %}
+        Logged user: {{ user.username }}<br>
+        <a href="{{ action }}">{{ label }}</a>
+        {% else %}
+        <a href="{{ action }}">{{ label }}</a>
+        {% endif %}
+    </p>
+</header>
+<body>
+{% block content %}{% endblock %}
+</body>
+</html>

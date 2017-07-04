@@ -16,6 +16,16 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
+from betapp.views import *
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^competitions/', CompetitionsView.as_view(), name="competitions"),
+    url(r'^competition/(?P<id>[\d]+)', CompetitionView.as_view(),
+        name="competition"),
+    url(r'^login/', LoginView.as_view(), name="login"),
+    url(r'^logout/', LogoutView.as_view(), name="logout"),
+    url(r'^register/', RegisterView.as_view(), name="register"),
+    url(r'^bet_fixture/(?P<id>[\d]+)', BetFixtureView.as_view(),
+        name="bet-fixture"),
 ]
