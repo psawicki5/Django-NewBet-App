@@ -1,5 +1,5 @@
 from .api_connection import url_conn, get_competitions, get_fixtures
-from .models import AppUser, User, Competition, Fixture, Team
+from .models import AppUser, User, Competition, Fixture, Team, Bet
 
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -118,9 +118,22 @@ def get_fixture_result(goals_home_team, goals_away_team):
         return 2
 
 
+def cash_user(bet):
+    app_user = bet.bet_user
+    if bet.bet_result == 1:
+        cash_win = bet.bet_amount * bet.bet_course
+        app_user.cash += cash_win
+        app_user.save()
+
+
 def check_bets(fixture):
-    bets = fixture.bet_set.all()
-    print(bets)
+    bets = Bet.objects.filter(fixture=fixture)
+
+    for bet in bets:
+        if bet.bet == fixture.fixture_result:
+            bet.bet_result = 1
+            bet.save()
+            cash_user(bet)
 
 
 def update_fixture(fixture, goals_away_team, goals_home_team):
@@ -134,8 +147,7 @@ def update_fixture(fixture, goals_away_team, goals_home_team):
                                                     goals_away_team
                                                     )
         fixture.save()
-    # TODO: check_bets in one indentation more
-    #check_bets(fixture)
+        check_bets(fixture)
 
 
 def update_fixtures(competition_id=ID, matchday=1):

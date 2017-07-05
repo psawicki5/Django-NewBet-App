@@ -7,7 +7,8 @@
 <p>Cash: {{ app_user.cash }}</p>
 <ul>
     {% for bet in bets %}
-    <li>{{ bet.fixture }} bet: {{bet.bet}} course: {{bet.bet_course}} bet amount: {{ bet.bet_amount }} zł result: {{ bet.bet_result }}</li>
+    <li>{{ bet.fixture }}{% if bet.fixture.status == 2  %} result: {{ bet.fixture.goals_home_team }} - {{ bet.fixture.goals_away_team }} {% endif %}
+        bet: {{bet.bet}} course: {{bet.bet_course}} bet amount: {{ bet.bet_amount }} zł result: {{ bet.bet_result }}</li>
     {% endfor %}
 </ul>
 {% endblock %}
