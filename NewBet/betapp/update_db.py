@@ -1,7 +1,12 @@
-from .api_connection import *
-from .models import *
+from .api_connection import url_conn, get_competitions, get_fixtures
+from .models import AppUser, User, Competition, Fixture, Team
 
 from django.core.exceptions import ObjectDoesNotExist
+
+#  Bundesliga 1
+ID = 394
+# season 2015
+SEASON = 2015
 
 
 def create_team(name, crest_url, code, short_name, competition):
@@ -64,7 +69,7 @@ def create_fixtures(link_fixtures, competition):
 
 
 def create_competition():
-    data = get_competitions(id=394, season=2015)
+    data = get_competitions(id=ID, season=SEASON)
     caption = data['caption']
     league = data['league']
     number_of_matchdays = data['numberOfMatchdays']
@@ -89,5 +94,79 @@ def create_competition():
     create_fixtures(link_fixtures, comp)
 
 
+def get_team(name, competition):
+    return Team.objects.get(name=name, competition=competition)
+
+
+def get_fixture(date, away_team_name, home_team_name, matchday, competition):
+    away_team = get_team(away_team_name, competition)
+    home_team = get_team(home_team_name, competition)
+    return Fixture.objects.get(home_team=home_team,
+                               away_team=away_team,
+                               date=date,
+                               matchday=matchday,
+                               competition=competition
+                               )
+
+
+def get_fixture_result(goals_home_team, goals_away_team):
+    if goals_home_team > goals_away_team:
+        return 1
+    elif goals_home_team == goals_away_team:
+        return 0
+    elif goals_home_team < goals_away_team:
+        return 2
+
+
+def check_bets(fixture):
+    bets = fixture.bet_set.all()
+    print(bets)
+
+
+def update_fixture(fixture, goals_away_team, goals_home_team):
+    if fixture.status == 1:
+        'and not fixture.goals_away_team and not fixture.goals_home_team)'
+        fixture.goals_home_team = goals_home_team
+        fixture.goals_away_team = goals_away_team
+        fixture.status = 2  # fixture PLAYED
+        #  Get fixture bet result 1, 2 or 0
+        fixture.fixture_result = get_fixture_result(goals_home_team,
+                                                    goals_away_team
+                                                    )
+        fixture.save()
+    # TODO: check_bets in one indentation more
+    #check_bets(fixture)
+
+
+def update_fixtures(competition_id=ID, matchday=1):
+    data = get_fixtures(competition_id, matchday)
+    fixtures_data = data['fixtures']
+
+    competition_data = get_competitions(id=competition_id)
+    competition_caption = competition_data['caption']
+    competition_year = competition_data['year']
+
+    competition = Competition.objects.get(caption=competition_caption,
+                                          year=competition_year
+                                          )
+
+    for data_row in fixtures_data:
+        date = data_row['date']
+        away_team_name = data_row['awayTeamName']
+        home_team_name = data_row['homeTeamName']
+        matchday = data_row['matchday']
+        goals_away_team = data_row['result']['goalsAwayTeam']
+        goals_home_team = data_row['result']['goalsHomeTeam']
+
+        fixture = get_fixture(date,
+                              away_team_name,
+                              home_team_name,
+                              matchday,
+                              competition
+                              )
+        update_fixture(fixture, goals_away_team, goals_home_team)
+
+
 "from betapp.update_db import *"
 "create_competition()"
+'update_fixtures(matchday=1)'

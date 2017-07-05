@@ -33,7 +33,7 @@ STATUS_TAB = ((1, "SCHEDULED"),
 
 BET_CHOICES = ((1, 1),
                (2, 2),
-               (3, 3)
+               (0, 0)
                )
 
 
@@ -49,7 +49,7 @@ class Fixture(models.Model):
     course_team_home_win = models.FloatField(default=1, blank=True)
     course_team_away_win = models.FloatField(default=1, blank=True)
     course_draw = models.FloatField(default=1, blank=True)
-    fixture_result = models.IntegerField(default=0, blank=True)
+    fixture_result = models.IntegerField(default=-1, blank=True)
 
     def __str__(self):
         return str(self.home_team.name + " - " + self.away_team.name)
@@ -70,4 +70,5 @@ class Bet(models.Model):
     fixture = models.ForeignKey(Fixture, related_name="fixture")
     bet = models.IntegerField(choices=BET_CHOICES)
     bet_course = models.FloatField(default=0)
+    # bet result 0: LOST, 1: WIN
     bet_result = models.IntegerField(default=0, blank=True)

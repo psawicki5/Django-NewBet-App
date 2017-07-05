@@ -44,7 +44,7 @@ class BetFixtureView(LoginRequiredMixin, View):
 
     def get(self, request, id):
         fixture = Fixture.objects.get(id=id)
-        if fixture.fixture_result == 0:
+        if fixture.fixture_result == -1:
             form = BetForm
             context = {"fixture": fixture,
                        "form": form

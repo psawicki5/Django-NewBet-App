@@ -24,4 +24,21 @@ def get_competitions(id="", season=""):
     return url_conn(url)
 
 
+def get_fixtures(competition_id, matchday):
+    url = 'http://api.football-data.org/v1/' \
+          'competitions/{}/fixtures?matchday={}'.format(competition_id,
+                                                        matchday
+                                                        )
+    return url_conn(url)
+
+#print(get_fixtures(394, 1))
+
+
+
+
+
+
+
+
+
 
