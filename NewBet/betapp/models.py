@@ -6,10 +6,10 @@ from django.core.validators import MinValueValidator
 class Competition(models.Model):
     caption = models.CharField(max_length=128)
     league = models.CharField(max_length=12)
-    numberOfMatchdays = models.IntegerField()
+    number_of_matchdays = models.IntegerField()
     year = models.IntegerField()
-    numberOfTeams = models.IntegerField()
-    currentMatchday = models.IntegerField()
+    number_of_teams = models.IntegerField()
+    current_matchday = models.IntegerField()
 
     def __str__(self):
         return self.caption
@@ -17,10 +17,10 @@ class Competition(models.Model):
 
 class Team(models.Model):
     name = models.CharField(max_length=256)
-    crestUrl = models.CharField(max_length=256, null=True, blank=True)
-    squadMarketValue = models.CharField(max_length=64, null=True, blank=True)
+    crest_url = models.CharField(max_length=256, null=True, blank=True)
+    squad_market_value = models.CharField(max_length=64, null=True, blank=True)
     code = models.CharField(max_length=12, null=True)
-    shortName = models.CharField(max_length=64)
+    short_name = models.CharField(max_length=64)
     competition = models.ForeignKey(Competition, null=True)
 
     def __str__(self):
@@ -38,21 +38,21 @@ BET_CHOICES = ((1, 1),
 
 
 class Fixture(models.Model):
-    homeTeam = models.ForeignKey(Team, related_name='homeTeam')
-    awayTeam = models.ForeignKey(Team, related_name='awayTeam')
+    home_team = models.ForeignKey(Team, related_name='homeTeam')
+    away_team = models.ForeignKey(Team, related_name='awayTeam')
     status = models.IntegerField(choices=STATUS_TAB, default=1)
     matchday = models.IntegerField()
     competition = models.ForeignKey(Competition, related_name='competition')
     date = models.DateTimeField()
-    goalsHomeTeam = models.IntegerField(default=None, null=True, blank=True)
-    goalsAwayTeam = models.IntegerField(default=None, null=True, blank =True)
+    goals_home_team = models.IntegerField(default=None, null=True, blank=True)
+    goals_away_team = models.IntegerField(default=None, null=True, blank =True)
     course_team_home_win = models.FloatField(default=1, blank=True)
     course_team_away_win = models.FloatField(default=1, blank=True)
     course_draw = models.FloatField(default=1, blank=True)
     fixture_result = models.IntegerField(default=0, blank=True)
 
     def __str__(self):
-        return str(self.homeTeam.name + " - " + self.awayTeam.name)
+        return str(self.home_team.name + " - " + self.away_team.name)
 
 
 class AppUser(models.Model):

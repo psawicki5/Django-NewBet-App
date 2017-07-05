@@ -2,7 +2,7 @@
 {% block content %}
 <ul>
     {% for fixture in fixtures %}
-    <li>{{fixture.date}} {{ fixture.homeTeam.name }} - {{ fixture.awayTeam.name }}
+    <li>{{fixture.date}} {{ fixture.home_team.name }} - {{ fixture.away_team.name }}
         <ol>
             <li> Home win: {{ fixture.course_team_home_win }}</li>
             <li> Draw: {{ fixture.course_draw }}</li>

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <h3>FIXTURE</h3>
-<p>Sides: {{ fixture.homeTeam.name }} - {{ fixture.awayTeam.name }}</p>
+<p>Sides: {{ fixture.home_team.name }} - {{ fixture.away_team.name }}</p>
 <p>Date: {{ fixture.date }}</p>
 {% for message in messages %}
     <p>{{ message }}</p>
