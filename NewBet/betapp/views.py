@@ -33,9 +33,9 @@ class CompetitionView(View):
 def get_bet_course(fixture, bet):
     if bet == 1:
         return fixture.course_team_home_win
-    elif bet == 2:
+    elif bet == 0:
         return fixture.course_draw
-    elif bet == 3:
+    elif bet == 2:
         return fixture.course_team_away_win
 
 
