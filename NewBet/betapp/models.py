@@ -28,7 +28,8 @@ class Team(models.Model):
 
 
 STATUS_TAB = ((1, "SCHEDULED"),
-              (2, "FINISHED")
+              (2, "FINISHED"),
+              (3, "PLAYING")
               )
 
 BET_CHOICES = ((1, 1),

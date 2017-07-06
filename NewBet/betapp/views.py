@@ -21,8 +21,7 @@ class CompetitionView(View):
     def get(self, request, id):
         competition = Competition.objects.get(id=id)
         fixtures = Fixture.objects.filter(competition=competition,
-                                          goals_home_team=None,
-                                          goals_away_team=None
+                                          status=1,
                                           )
         context = {"competition": competition,
                    "fixtures": fixtures
@@ -44,7 +43,7 @@ class BetFixtureView(LoginRequiredMixin, View):
 
     def get(self, request, id):
         fixture = Fixture.objects.get(id=id)
-        if fixture.fixture_result == -1:
+        if fixture.status == 1:
             form = BetForm
             context = {"fixture": fixture,
                        "form": form

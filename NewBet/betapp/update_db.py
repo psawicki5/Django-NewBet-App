@@ -4,8 +4,8 @@ from .models import AppUser, User, Competition, Fixture, Team, Bet
 
 from django.core.exceptions import ObjectDoesNotExist
 
-#  Premier league
-ID = 426
+#  Bundesliga 1
+ID = 430
 # season 2016
 
 
@@ -319,9 +319,9 @@ def update_fixture(fixture, goals_away_team, goals_home_team):
     :param goals_home_team: int
     :return: None
     """
-    # if fixture status == SCHEDULED update fixture, save it and run function
-    # that checks related bets
-    if fixture.status == 1:
+    # if fixture status == SCHEDULED or PLAYING update fixture, save it and run
+    # function that checks related bets
+    if fixture.status == 1 or fixture.status == 3:
         'and not fixture.goals_away_team and not fixture.goals_home_team)'
         fixture.goals_home_team = goals_home_team
         fixture.goals_away_team = goals_away_team
@@ -369,7 +369,7 @@ def update_fixtures(competition_id=ID, matchday=""):
                               matchday,
                               competition
                               )
-        if fixture.get_status_display() != fixture_status:
+        if fixture.get_status_display() != "FINISHED":
             update_fixture(fixture, goals_away_team, goals_home_team)
     # updates odds in fixtures after each fixtures update
     update_odds_in_fixtures(competition_id)
