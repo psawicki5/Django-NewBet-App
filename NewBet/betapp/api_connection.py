@@ -39,7 +39,7 @@ def get_competitions(id="", season=""):
     return url_conn(url)
 
 
-def get_fixtures(competition_id, matchday=""):
+def get_fixtures(competition_id, matchday):
     """
     Returns fixtures for given competition and matchday
     :param competition_id: int - competition id in api server

@@ -335,7 +335,7 @@ def update_fixture(fixture, goals_away_team, goals_home_team):
         check_bets(fixture)
 
 
-def update_fixtures(competition_id=ID, matchday=1):
+def update_fixtures(competition_id=ID, matchday=""):
     """
     Updates fixtures with data from api server. 
     Fixtures are updated according to matchday.
