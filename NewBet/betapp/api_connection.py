@@ -87,7 +87,3 @@ def get_team_last_fixtures(team_api_id):
         if row['status'] == "FINISHED":
             new_data.append(row)
     return new_data[:15]
-
-
-
-#print(get_team_last_fixtures(5))
