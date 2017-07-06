@@ -89,3 +89,4 @@ def get_team_last_fixtures(team_api_id):
 #print(get_league_table(394))
 #print(get_competitions(id="394"))
 #print(get_fixtures(394,1))
+#print(get_competitions(season=2016))

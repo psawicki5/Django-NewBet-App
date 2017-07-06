@@ -4,10 +4,9 @@ from .models import AppUser, User, Competition, Fixture, Team, Bet
 
 from django.core.exceptions import ObjectDoesNotExist
 
-#  Bundesliga 1
-ID = 394
-# season 2015
-SEASON = 2015
+#  Premier league
+ID = 426
+# season 2016
 
 
 def create_team(name, crest_url, code, short_name, competition):
@@ -60,9 +59,9 @@ def get_team_balance(league_table, team_name, venue):
             # if there is no matches in league table then wins/draws/losses = 10
             # TODO: make it more probable
             if wins == 0 and draws == 0 and losses == 0:
-                wins = 10
+                wins = 5
                 draws = 10
-                losses = 10
+                losses = 7
 
             balance = {"wins": wins,
                        "draws": draws,
@@ -193,7 +192,7 @@ def create_fixtures(link_fixtures, competition, league_table):
                        away_win, draw, home_win)
 
 
-def create_competition(competition_id=ID, season=SEASON):
+def create_competition(competition_id=ID):
     """
     Gets data from competiton json, creates Competition object if doesnt already 
     exist and saves it to db, runst functions that create teams and fixtures 
@@ -201,7 +200,7 @@ def create_competition(competition_id=ID, season=SEASON):
     :param competition_id: int - id of competition in api server
     :param season: int - year of season start
     """
-    data = get_competitions(id=competition_id, season=season)
+    data = get_competitions(id=competition_id)
     caption = data['caption']
     league = data['league']
     number_of_matchdays = data['numberOfMatchdays']
@@ -370,7 +369,7 @@ def update_fixtures(competition_id=ID, matchday=""):
                               matchday,
                               competition
                               )
-        if fixture.get_status_display != fixture_status:
+        if fixture.get_status_display() != fixture_status:
             update_fixture(fixture, goals_away_team, goals_home_team)
     # updates odds in fixtures after each fixtures update
     update_odds_in_fixtures(competition_id)
