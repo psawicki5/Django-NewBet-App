@@ -4,6 +4,7 @@ from .models import AppUser, User, Competition, Fixture, Team, Bet
 
 from django.core.exceptions import ObjectDoesNotExist
 
+from random import randint
 #  Bundesliga 1
 ID = 430
 # season 2016
@@ -48,6 +49,13 @@ def create_teams(link_teams, competition):
 
 
 def get_team_balance(league_table, team_name, venue):
+    """
+    Gets team balance from league table
+    :param league_table: json object of league table
+    :param team_name: string
+    :param venue: string - home/away
+    :return: dict - with int values of wins, draws, losses
+    """
 
     # iterate through list and find selected team
     for team in league_table['standing']:
@@ -56,12 +64,12 @@ def get_team_balance(league_table, team_name, venue):
             draws = team[venue]['draws']
             losses = team[venue]['losses']
 
-            # if there is no matches in league table then wins/draws/losses = 10
+            # if there is no matches in league table then wins/draws/losses
             # TODO: make it more probable
             if wins == 0 and draws == 0 and losses == 0:
-                wins = 5
-                draws = 10
-                losses = 7
+                wins = randint(1, 10)
+                draws = randint(1, 10)
+                losses = randint(1, 10)
 
             balance = {"wins": wins,
                        "draws": draws,
@@ -71,6 +79,12 @@ def get_team_balance(league_table, team_name, venue):
 
 
 def calculate_result_odds(balance):
+    """
+    Calculates result odd based on home team  home wins/draws/losses and
+    away team away wins/draws/losses
+    :param balance: dict - dict with int's of hme/away wins/draws/losses
+    :return: dict - of float numbers of home win/draw/away win
+    """
 
     home_wins = balance['home_wins']
     home_draws = balance['home_draws']
@@ -78,10 +92,12 @@ def calculate_result_odds(balance):
     away_wins = balance['away_wins']
     away_draws = balance['away_draws']
     away_losses = balance['away_losses']
-
+    # sums all games
     sum_of_fixtures = sum([home_wins, home_draws, home_losses, away_wins,
                            away_draws, away_losses])
 
+    # calculates prices of particular outcomes
+    # not great algorithm of calculating odds but for this app it will suffice
     home_price = home_wins + away_losses
     draw_price = home_draws + away_draws
     away_price = home_losses + away_wins
@@ -308,6 +324,9 @@ def check_bets(fixture):
             bet.bet_result = 1
             bet.save()
             cash_user(bet)
+        else:
+            bet.bet_result = 0
+            bet.save()
 
 
 def update_fixture(fixture, goals_away_team, goals_home_team):
@@ -361,7 +380,7 @@ def update_fixtures(competition_id=ID, matchday=""):
         matchday = data_row['matchday']
         goals_away_team = data_row['result']['goalsAwayTeam']
         goals_home_team = data_row['result']['goalsHomeTeam']
-        fixture_status = data_row['status']
+        # fixture_status = data_row['status']
 
         fixture = get_fixture(date,
                               away_team_name,
@@ -376,6 +395,11 @@ def update_fixtures(competition_id=ID, matchday=""):
 
 
 def update_odds_in_fixtures(competition_id):
+    """
+    Updates odds for scheduled fixtures
+    :param competition_id: int
+    :return: None
+    """
     league_table = get_league_table(competition_id)
 
     fixtures = Fixture.objects.filter(status=1)

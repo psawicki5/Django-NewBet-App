@@ -66,10 +66,16 @@ class AppUser(models.Model):
 
 
 class Bet(models.Model):
+
+    BET_RESULTS = ((0, "LOST"),
+                   (1, "WON"),
+                   (2, "PENDING")
+                   )
+
     bet_user = models.ForeignKey(AppUser, related_name="bet_user")
     bet_amount = models.FloatField(validators=[MinValueValidator(0.01)])
     fixture = models.ForeignKey(Fixture, related_name="fixture")
     bet = models.IntegerField(choices=BET_CHOICES)
     bet_course = models.FloatField(default=0)
     # bet result 0: LOST, 1: WIN
-    bet_result = models.IntegerField(default=0, blank=True)
+    bet_result = models.IntegerField(default=2, blank=True, choices=BET_RESULTS)

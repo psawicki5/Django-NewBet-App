@@ -4,11 +4,28 @@
 <p>First name: {{ user.first_name }}</p>
 <p>Last name: {{ user.last_name }}</p>
 <p>Email {{ user.email }}</p>
-<p>Cash: {{ app_user.cash }}</p>
-<ul>
-    {% for bet in bets %}
-    <li>{{ bet.fixture }}{% if bet.fixture.status == 2  %} result: {{ bet.fixture.goals_home_team }} - {{ bet.fixture.goals_away_team }} {% endif %}
-        bet: {{bet.bet}} course: {{bet.bet_course}} bet amount: {{ bet.bet_amount }} zł result: {{ bet.bet_result }}</li>
-    {% endfor %}
-</ul>
+<p>Cash: {{ app_user.cash }} PLN</p>
+
+    <table border="1">
+        <tr>
+            <th>Fixture</th>
+            <th>Result</th>
+            <th>Bet</th>
+            <th>Course</th>
+            <th>Bet Amount</th>
+            <th>Result</th>
+        </tr>
+        {% for bet in bets %}
+        <tr>
+            <td>{{ bet.fixture }}</td>
+            <td>{{ bet.fixture.goals_home_team }} - {{ bet.fixture.goals_away_team }}</td>
+            <td>{{bet.bet}}</td>
+            <td>{{bet.bet_course}}</td>
+            <td>{{ bet.bet_amount }} PLN</td>
+            <td>{{ bet.get_bet_result_display }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+<a href="{% url 'competitions' %}">Competitions</a>
 {% endblock %}

@@ -21,6 +21,6 @@ def check_if_fixture_started():
     change_status()
 
 
-@kronos.register('*/2 * * * *')
+@kronos.register('*/30 * * * *')
 def update_fixtures_periodically():
     update_fixtures()
