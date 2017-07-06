@@ -1,5 +1,5 @@
 from .api_connection import url_conn, get_competitions, get_fixtures, \
-    get_team_last_fixtures
+    get_team_last_fixtures, get_league_table
 from .models import AppUser, User, Competition, Fixture, Team, Bet
 
 from django.core.exceptions import ObjectDoesNotExist
@@ -50,36 +50,31 @@ def create_teams(link_teams, competition):
         create_team(name, crest_url, code, short_name, competition)
 
 
-def get_team_balance(fixtures, team_name):
-    """
-    Returns team balance 
-    :param fixtures: list - list of last 15 fixtures of team
-    :param team_name: string - team name
-    :return: wins, draws, losses
-    """
-    wins = 0
-    draws = 0
-    losses = 0
-    for fixture in fixtures:
-        home_goals = fixture['result']['goalsHomeTeam']
-        away_goals = fixture['result']['goalsAwayTeam']
-        if fixture['homeTeamName'] == team_name:
-            result = get_fixture_result(home_goals, away_goals)
-        elif fixture['awayTeamName'] == team_name:
-            result = get_fixture_result(away_goals, home_goals)
+def get_team_balance(league_table, team_name, venue):
 
-        if result == 1:
-            wins += 1
-        elif result == 0:
-            draws += 1
-        else:
-            losses += 1
-
-    return wins, draws, losses
+    # iterate through list and find selected team
+    for team in league_table['standing']:
+        if team['teamName'] == team_name:
+            wins = team[venue]['wins']
+            draws = team[venue]['draws']
+            losses = team[venue]['losses']
+            # TODO: check if the wins/draws/losses == 0
+            balance = {"wins": wins,
+                       "draws": draws,
+                       "losses": losses
+                       }
+            return balance
 
 
-def calculate_result_odds(home_wins, home_draws, home_losses, away_wins,
-                          away_draws, away_losses):
+def calculate_result_odds(balance):
+
+    home_wins = balance['home_wins']
+    home_draws = balance['home_draws']
+    home_losses = balance['home_losses']
+    away_wins = balance['away_wins']
+    away_draws = balance['away_draws']
+    away_losses = balance['away_losses']
+
     sum_of_fixtures = sum([home_wins, home_draws, home_losses, away_wins,
                            away_draws, away_losses])
 
@@ -87,50 +82,54 @@ def calculate_result_odds(home_wins, home_draws, home_losses, away_wins,
     draw_price = home_draws + away_draws
     away_price = home_losses + away_wins
 
-    home_win = round((home_price / sum_of_fixtures), 2)
-    draw = round((draw_price / sum_of_fixtures), 2)
-    away_win = round((away_price / sum_of_fixtures), 2)
+    home_win = round(1 / (home_price / sum_of_fixtures), 2)
+    draw = round(1 / (draw_price / sum_of_fixtures), 2)
+    away_win = round(1 / (away_price / sum_of_fixtures), 2)
 
-    return home_win, draw, away_win
+    odds = {'home_win': home_win,
+            'draw': draw,
+            'away_win': away_win
+            }
+
+    return odds
 
 
-def calculate_odds(home_team_api_id,
-                   away_team_api_id,
-                   home_team_name,
-                   away_team_name
+def calculate_odds(home_team_name,
+                   away_team_name,
+                   league_table
                    ):
     """
     This is not a good way of calculating odds but for needs of this simple 
-    app it will suffice.
-    :param home_team_api_id: 
-    :param away_team_api_id: 
+    app it will suffice. 
     :param home_team_name: 
     :param away_team_name: 
     :return: 
     """
-    home_team_last_fixtures = get_team_last_fixtures(home_team_api_id)
-    away_team_last_fixtures = get_team_last_fixtures(away_team_api_id)
 
-    home_wins, home_draws, home_losses = get_team_balance(
-        home_team_last_fixtures,
-        home_team_name
-    )
-    away_wins, away_draws, away_losses = get_team_balance(
-        away_team_last_fixtures,
-        away_team_name
-    )
-    away_win, draw, home_win = calculate_result_odds(home_wins,
-                                                     home_draws,
-                                                     home_losses,
-                                                     away_wins,
-                                                     away_draws,
-                                                     away_losses
-                                                     )
-    return away_win, draw, home_win
+    home_team_balance = get_team_balance(league_table,
+                                         home_team_name,
+                                         'home'
+                                         )
+
+    away_team_balance = get_team_balance(league_table,
+                                         away_team_name,
+                                         'away'
+                                         )
+
+    both_teams_balance = {'home_wins': home_team_balance['wins'],
+                          'home_draws': home_team_balance['draws'],
+                          'home_losses': home_team_balance['losses'],
+                          'away_wins': away_team_balance['wins'],
+                          'away_draws': away_team_balance['draws'],
+                          'away_losses': away_team_balance['losses'],
+                          }
+
+    return calculate_result_odds(both_teams_balance)
 
 
 def create_fixture(home_team_name, away_team_name, matchday, date, competition,
                    away_win, draw, home_win):
+    ###########################################################################
     """
     Creates Fixture object and saves it ot db
     :param home_team_name: string
@@ -173,31 +172,25 @@ def separate_id(href):
     return team_api_id
 
 
-def create_fixtures(link_fixtures, competition):
+def create_fixtures(link_fixtures, competition, league_table):
     """
     Iterates through team data recieved from link_fixtures json,
     retrieves data from json and runs function that create Fixture objects
     :param link_fixtures: string - link to json fixture data
     :param competition: Competition object
     """
+
     data = url_conn(link_fixtures)['fixtures']
     for fixture_data in data:
         home_team = fixture_data['homeTeamName']
         away_team = fixture_data['awayTeamName']
-        #print(fixture_data)
-        away_team_api_id = separate_id(fixture_data['_links']['awayTeam']['href'])
-        home_team_api_id = separate_id(fixture_data['_links']['homeTeam']['href'])
         matchday = fixture_data['matchday']
         date = fixture_data['date']
-################################################################################
-        '''away_win, draw, home_win = calculate_odds(home_team_api_id,
-                                                  away_team_api_id ,
-                                                  home_team,
-                                                  away_team
-                                                  )'''
-        away_win = 2
-        draw = 2
-        home_win = 2
+        odds = calculate_odds(home_team, away_team, league_table)
+
+        home_win = odds['home_win']
+        draw = odds['draw']
+        away_win = odds['away_win']
 
         create_fixture(home_team, away_team, matchday, date, competition,
                        away_win, draw, home_win)
@@ -219,6 +212,11 @@ def create_competition(competition_id=ID, season=SEASON):
     number_of_teams = data['numberOfTeams']
     current_matchday = data["currentMatchday"]
 
+    # get league table link
+    league_table_link = data['_links']['leagueTable']['href']
+    # get league table
+    league_table = url_conn(league_table_link)
+
     # Try to get competition object of given caption and year, if doesnt exist
     # create new Competition
     try:
@@ -235,7 +233,7 @@ def create_competition(competition_id=ID, season=SEASON):
     link_teams = data['_links']['teams']['href']
     link_fixtures = data['_links']['fixtures']['href']
     create_teams(link_teams, comp)
-    create_fixtures(link_fixtures, comp)
+    create_fixtures(link_fixtures, comp, league_table)
 
 
 def get_team(name, competition):
@@ -359,7 +357,7 @@ def update_fixtures(competition_id=ID, matchday=1):
     competition = Competition.objects.get(caption=competition_caption,
                                           year=competition_year
                                           )
-
+    # picks needed competition data
     for data_row in fixtures_data:
         date = data_row['date']
         away_team_name = data_row['awayTeamName']

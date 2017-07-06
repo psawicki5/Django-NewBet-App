@@ -53,17 +53,14 @@ def get_fixtures(competition_id, matchday):
     return url_conn(url)
 
 
-def get_league_table(competition_id, matchday):
+def get_league_table(competition_id):
     """
     Returns league table for competition and given matchday
     :param competition_id: int - competition id in api server
-    :param matchday: int
     :return: json data with league table
     """
     url = "http://api.football-data.org/v1/" \
-          "competitions/{}/leagueTable?matchday={}".format(competition_id,
-                                                           matchday
-                                                           )
+          "competitions/{}/leagueTable".format(competition_id)
     return url_conn(url)
 
 
@@ -87,3 +84,6 @@ def get_team_last_fixtures(team_api_id):
         if row['status'] == "FINISHED":
             new_data.append(row)
     return new_data[:15]
+
+#print(get_league_table(394))
+#print(get_competitions(id="394"))

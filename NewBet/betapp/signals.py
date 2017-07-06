@@ -4,7 +4,7 @@ from django.dispatch import receiver
 
 from .models import *
 
-
+'''
 @receiver(post_save, sender=Fixture)
 def check_fixture(sender, instance, **kwargs):
     print(instance)
@@ -15,3 +15,4 @@ def check_fixture(sender, instance, **kwargs):
 def check_fixture(sender, instance, **kwargs):
     print(instance)
     print("checked")
+'''
