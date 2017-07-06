@@ -39,9 +39,9 @@ def get_competitions(id="", season=""):
     return url_conn(url)
 
 
-def get_fixtures(competition_id, matchday):
+def get_fixtures(competition_id, matchday=""):
     """
-    Returns dixtures for given competition and matchday
+    Returns fixtures for given competition and matchday
     :param competition_id: int - competition id in api server
     :param matchday: int
     :return: json data with fixtures
@@ -50,6 +50,7 @@ def get_fixtures(competition_id, matchday):
           'competitions/{}/fixtures?matchday={}'.format(competition_id,
                                                         matchday
                                                         )
+    # TODO: Get all fixtures without specifying matchday
     return url_conn(url)
 
 
@@ -87,3 +88,4 @@ def get_team_last_fixtures(team_api_id):
 
 #print(get_league_table(394))
 #print(get_competitions(id="394"))
+#print(get_fixtures(394,1))

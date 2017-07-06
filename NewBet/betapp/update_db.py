@@ -4,8 +4,6 @@ from .models import AppUser, User, Competition, Fixture, Team, Bet
 
 from django.core.exceptions import ObjectDoesNotExist
 
-import re
-
 #  Bundesliga 1
 ID = 394
 # season 2015
@@ -58,7 +56,14 @@ def get_team_balance(league_table, team_name, venue):
             wins = team[venue]['wins']
             draws = team[venue]['draws']
             losses = team[venue]['losses']
-            # TODO: check if the wins/draws/losses == 0
+
+            # if there is no matches in league table then wins/draws/losses = 10
+            # TODO: make it more probable
+            if wins == 0 and draws == 0 and losses == 0:
+                wins = 10
+                draws = 10
+                losses = 10
+
             balance = {"wins": wins,
                        "draws": draws,
                        "losses": losses
@@ -101,9 +106,9 @@ def calculate_odds(home_team_name,
     """
     This is not a good way of calculating odds but for needs of this simple 
     app it will suffice. 
-    :param home_team_name: 
-    :param away_team_name: 
-    :return: 
+    :param home_team_name: string 
+    :param away_team_name: string
+    :return: calculated odds of home_win, draw, away_win
     """
 
     home_team_balance = get_team_balance(league_table,
@@ -129,14 +134,17 @@ def calculate_odds(home_team_name,
 
 def create_fixture(home_team_name, away_team_name, matchday, date, competition,
                    away_win, draw, home_win):
-    ###########################################################################
     """
-    Creates Fixture object and saves it ot db
+    Creates fixture and saves it to db
     :param home_team_name: string
     :param away_team_name: string
     :param matchday: int
-    :param date: string - date of fixture
-    :param competition: Competition object that fixtures contribute to
+    :param date: string
+    :param competition: Competition object
+    :param away_win: float - odds of away win
+    :param draw: float - odds of draw
+    :param home_win: float - odds of home win
+    :return: 
     """
     #  Get Team objects
     home_team = Team.objects.get(name=home_team_name, competition=competition)
@@ -159,17 +167,6 @@ def create_fixture(home_team_name, away_team_name, matchday, date, competition,
                                course_team_away_win=away_win,
                                course_draw=draw
                                )
-
-
-def separate_id(href):
-    """
-    Separates team_api_id from link
-    :param href: string - link to team data
-    :return: int id of team in api server
-    """
-    team_api_id = re.findall('/([\d]+)', href)
-    team_api_id = int(team_api_id[0])
-    return team_api_id
 
 
 def create_fixtures(link_fixtures, competition, league_table):
@@ -365,6 +362,7 @@ def update_fixtures(competition_id=ID, matchday=1):
         matchday = data_row['matchday']
         goals_away_team = data_row['result']['goalsAwayTeam']
         goals_home_team = data_row['result']['goalsHomeTeam']
+        fixture_status = data_row['status']
 
         fixture = get_fixture(date,
                               away_team_name,
@@ -372,7 +370,25 @@ def update_fixtures(competition_id=ID, matchday=1):
                               matchday,
                               competition
                               )
-        update_fixture(fixture, goals_away_team, goals_home_team)
+        if fixture.get_status_display != fixture_status:
+            update_fixture(fixture, goals_away_team, goals_home_team)
+    # updates odds in fixtures after each fixtures update
+    update_odds_in_fixtures(competition_id)
+
+
+def update_odds_in_fixtures(competition_id):
+    league_table = get_league_table(competition_id)
+
+    fixtures = Fixture.objects.filter(status=1)
+
+    for fixture in fixtures:
+        home_team_name = fixture.home_team.name
+        away_team_name = fixture.away_team.name
+        odds = calculate_odds(home_team_name, away_team_name, league_table)
+        fixture.course_team_home_win = odds['home_win']
+        fixture.course_draw = odds['draw']
+        fixture.course_team_away_win = odds['away_win']
+        fixture.save()
 
 
 "from betapp.update_db import *"
