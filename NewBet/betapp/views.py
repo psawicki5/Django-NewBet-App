@@ -12,6 +12,10 @@ from .forms import *
 
 class CompetitionsView(View):
     def get(self, request):
+        """
+        Displays all competitions in db
+        :return: rendered html with all competitions
+        """
         competitions = Competition.objects.all()
         context = {"competitions": competitions}
         return render(request, 'competitions.html', context)
@@ -19,6 +23,12 @@ class CompetitionsView(View):
 
 class CompetitionView(View):
     def get(self, request, id):
+        """
+        Displays competition and all fixtures in competition
+        :param request: 
+        :param id: int - competition id in db
+        :return: rendered html with competition and fixtures
+        """
         competition = Competition.objects.get(id=id)
         fixtures = Fixture.objects.filter(competition=competition,
                                           status=1,
@@ -30,6 +40,12 @@ class CompetitionView(View):
 
 
 def get_bet_course(fixture, bet):
+    """
+    Gets bet course from fixture and returns it
+    :param fixture: Fixture object
+    :param bet: int - 1:home_win, 2:away_win, 0:draw
+    :return: float - course
+    """
     if bet == 1:
         return fixture.course_team_home_win
     elif bet == 0:
@@ -42,6 +58,11 @@ class BetFixtureView(LoginRequiredMixin, View):
     login_url = reverse_lazy('login')
 
     def get(self, request, id):
+        """
+        Displays form for betting 
+        :param id: int - id of fixture
+        :return: rendered form
+        """
         fixture = Fixture.objects.get(id=id)
         if fixture.status == 1:
             form = BetForm
@@ -51,6 +72,12 @@ class BetFixtureView(LoginRequiredMixin, View):
             return render(request, "bet_form.html", context)
 
     def post(self, request, id):
+        """
+        Checks if form is valid, user has the cash, cash amount is valid and 
+        then saves bet ot db
+        :param id: int - fixture id
+        :return: redirection to competitions view
+        """
         fixture = Fixture.objects.get(id=id)
         user = request.user
         app_user = AppUser.objects.get(user=user)
@@ -59,7 +86,8 @@ class BetFixtureView(LoginRequiredMixin, View):
             bet_amount = form.cleaned_data['bet_amount']
             bet = form.cleaned_data['bet']
             bet_course = get_bet_course(fixture, bet)
-            if app_user.cash - bet_amount >= 0.0:
+            # check if cash amount is valid
+            if app_user.cash - bet_amount >= 0.0 and bet_amount >= 0.01:
                 app_user.cash -= bet_amount
                 app_user.save()
                 Bet.objects.create(bet_user=app_user,
@@ -73,6 +101,7 @@ class BetFixtureView(LoginRequiredMixin, View):
 
 class LoginView(UserPassesTestMixin, FormView):
     def test_func(self):
+        # tests if user is authenticated
         return not self.request.user.is_authenticated
     template_name = "login_form.html"
     form_class = LoginForm

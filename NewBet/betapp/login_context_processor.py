@@ -1,10 +1,10 @@
 def login_cp(request):
     if request.user.is_authenticated():
         action = "/logout/"
-        label = "Log out"
+        label = "Logout"
     else:
         action = "/login/"
-        label = "Log in"
+        label = "Login"
     context = {
         "action": action,
         "label": label

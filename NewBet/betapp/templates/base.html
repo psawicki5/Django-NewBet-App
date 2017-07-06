@@ -1,10 +1,17 @@
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>NewBet</title>
+    <link rel="stylesheet" href="{% static 'css/newbet.css' %}">
 </head>
 <header class="page-header">
+    <h1>NewBetApp</h1>
     <p>
         {% if user.username %}
         Logged user: {{ user.username }}<br>
@@ -16,6 +23,9 @@
     </p>
 </header>
 <body>
-{% block content %}{% endblock %}
+<div class="content">
+    {% block content %}{% endblock %}
+</div>
+
 </body>
 </html>

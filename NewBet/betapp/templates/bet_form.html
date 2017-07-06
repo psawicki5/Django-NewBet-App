@@ -1,12 +1,24 @@
 {% extends 'base.html' %}
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+{% load staticfiles %}
 {% block content %}
-<h3>FIXTURE</h3>
-<p>Sides: {{ fixture.home_team.name }} - {{ fixture.away_team.name }}</p>
-<p>Date: {{ fixture.date }}</p>
+
 {% for message in messages %}
     <p>{{ message }}</p>
 {% endfor %}
 <div class="form">
+    <h3>FIXTURE</h3>
+    <p>Sides: {{ fixture.home_team.name }} - {{ fixture.away_team.name }}</p>
+    <p>
+        Courses:<br>
+        <strong>1X:</strong> {{ fixture.course_team_home_win }} |
+        <strong>0X:</strong> {{ fixture.course_draw }} |
+        <strong>2X:</strong> {{ fixture.course_team_away_win }}
+    </p>
+    <p>Date: {{ fixture.date }}</p>
     <form action="" method="POST">
         {% csrf_token %}
         {% for field in form %}
