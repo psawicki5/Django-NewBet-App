@@ -31,5 +31,7 @@ urlpatterns = [
         name="bet-fixture"),
     url(r'^account_details/', AccountDetailsView.as_view(),
         name="account-details"),
+    url(r'^show_team/(?P<team_id>[\d]+)', ShowTeamView.as_view(),
+        name="show-team"),
 ]
 

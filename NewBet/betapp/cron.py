@@ -1,7 +1,6 @@
 import kronos
-from datetime import datetime
-from django.utils import timezone
 
+from django.utils import timezone
 from .models import *
 from .update_db import update_fixtures
 

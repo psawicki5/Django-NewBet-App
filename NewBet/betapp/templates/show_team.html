@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ team.name }}</h1>
+<h3>{{ competition.caption }}</h3>
+
+<a href="{% url 'competitions' %}">Competitions</a>
+
+<h4>Team fixtures home</h4>
+<ul>
+    {% for fixture in team_fixtures_home %}
+    <li>{{fixture.date}} | {{ fixture.home_team.name }} - {{ fixture.away_team.name }} | matchday: {{ fixture.matchday }}
+        <ol>
+            <li> Home win: {{ fixture.course_team_home_win }}</li>
+            <li> Draw: {{ fixture.course_draw }}</li>
+            <li> Away win: {{ fixture.course_team_away_win }}</li>
+        </ol>
+        {% if fixture.status == 1 %}
+            <a href="{% url 'bet-fixture' fixture.id %}">Bet fixture</a>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+
+<h4>Team fixtures away</h4>
+<ul>
+    {% for fixture in team_fixtures_away %}
+    <li>{{fixture.date}} | {{ fixture.home_team.name }} - {{ fixture.away_team.name }} | matchday: {{ fixture.matchday }}
+        <ol>
+            <li> Home win: {{ fixture.course_team_home_win }}</li>
+            <li> Draw: {{ fixture.course_draw }}</li>
+            <li> Away win: {{ fixture.course_team_away_win }}</li>
+        </ol>
+        {% if fixture.status == 1 %}
+            <a href="{% url 'bet-fixture' fixture.id %}">Bet fixture</a>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

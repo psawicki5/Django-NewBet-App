@@ -79,3 +79,4 @@ class Bet(models.Model):
     bet_course = models.FloatField(default=0)
     # bet result 0: LOST, 1: WIN
     bet_result = models.IntegerField(default=2, blank=True, choices=BET_RESULTS)
+

@@ -189,3 +189,26 @@ class AccountDetailsView(LoginRequiredMixin, View):
         return render(request, "my_account.html", context)
 
 
+class ShowTeamView(View):
+    def get(self, request, team_id):
+        team = Team.objects.get(id=team_id)
+        competition = team.competition
+        team_fixtures_home = Fixture.objects.filter(home_team=team)
+        team_fixtures_away = Fixture.objects.filter(away_team=team)
+
+        all_fixtures = [game for game in team_fixtures_away] + [game for game in team_fixtures_home]
+
+        played_fixtures = [game for game in all_fixtures if game.status == 2]
+        scheduled_fixtures = [game for game in all_fixtures if game.status == 1]
+
+        context = {"team": team,
+                   "competition": competition,
+                   "team_fixtures_home": team_fixtures_home,
+                   "team_fixtures_away": team_fixtures_away,
+                   "played_fixtures": played_fixtures,
+                   "scheduled_fixtures": scheduled_fixtures
+                   }
+
+        return render(request, "show_team.html", context)
+
+

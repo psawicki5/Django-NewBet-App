@@ -3,11 +3,11 @@
 <h1>{{ competition.caption }}</h1>
 <ul>
     {% for fixture in fixtures %}
-    <li>{{fixture.date}} | {{ fixture.home_team.name }} - {{ fixture.away_team.name }} | matchday: {{ fixture.matchday }}
+    <li>{{fixture.date}} | <a href="{% url 'show-team' fixture.home_team.id %}">{{ fixture.home_team.name }}</a> - <a href="{% url 'show-team' fixture.away_team.id %}">{{ fixture.away_team.name }}</a> | matchday: {{ fixture.matchday }}
         <ol>
             <li> Home win: {{ fixture.course_team_home_win }}</li>
             <li> Draw: {{ fixture.course_draw }}</li>
-            <li> away win: {{ fixture.course_team_away_win }}</li>
+            <li> Away win: {{ fixture.course_team_away_win }}</li>
         </ol>
         <a href="{% url 'bet-fixture' fixture.id %}">Bet fixture</a>
     </li>

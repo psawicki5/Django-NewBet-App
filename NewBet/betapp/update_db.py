@@ -32,9 +32,8 @@ def create_team(name, crest_url, code, short_name, competition):
 
 def create_teams(link_teams, competition):
     """
-    Iterates through team data recieved from json from link_teams,
-    retrievs team data, then runs function that creates 
-    function that creates Team objects
+    Iterates through team data recieved in json,
+    retrievs team data, then runs function that creates Team objects
     :param link_teams: string - link to teams data json
     :param competition: Competition object that teams contribute to
     """
