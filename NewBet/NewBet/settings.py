@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'betapp',
     'kronos',
-    'bootstrap3',
+
 ]
 
 MIDDLEWARE = [

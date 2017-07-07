@@ -13,7 +13,6 @@ def change_status():
         if fixture.date < now:
             fixture.status = 3
             fixture.save()
-            #print("ok")
 
 
 @kronos.register('*/5 * * * *')

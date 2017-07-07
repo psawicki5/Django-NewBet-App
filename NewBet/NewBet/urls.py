@@ -18,6 +18,7 @@ from django.contrib import admin
 
 from betapp.views import *
 
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^competitions/', CompetitionsView.as_view(), name="competitions"),
@@ -31,3 +32,4 @@ urlpatterns = [
     url(r'^account_details/', AccountDetailsView.as_view(),
         name="account-details"),
 ]
+

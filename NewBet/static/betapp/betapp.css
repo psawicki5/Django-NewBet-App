@@ -1,0 +1,63 @@
+.page-header h1 {
+    color: #ffffff;
+    font-size: 36pt;
+    text-decoration: none;
+    text-align: left;
+}
+
+.page-header p {
+    text-align: right;
+    color: #ffffff;
+    font-size: 12pt;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.page-header a {
+    font-family: 'Lobster', cursive;
+    text-align: right;
+    color: #ffffff;
+    font-size: 14pt;
+    text-decoration: none;
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Lobster', cursive;
+}
+a {
+    font-family: 'Open Sans', cursive;
+    font-weight: 400;
+}
+
+body {
+    margin: auto;
+    width: 90%;
+    padding: 10px;
+    background-color: aliceblue;
+}
+
+.content {
+    margin: auto;
+    width: 100%;
+    padding: 10px;
+    background-color: #ffffff;
+}
+
+.form {
+    margin: auto;
+    text-align: center;
+    width: 100%;
+    padding: 10px;
+    background-color: #ffffff;
+}
+
+.page-header {
+    background-color: #21a1ff;
+    margin-top: 0;
+    padding: 20px 20px 20px 40px;
+}
+
+td, th {
+    text-align:center;
+    padding: 4px;
+}
