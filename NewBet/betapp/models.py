@@ -57,6 +57,7 @@ class Fixture(models.Model):
 
 
 class AppUser(models.Model):
+    # TODO: change cash to decimal
     cash = models.FloatField(validators=[MinValueValidator(0.00)])
     bank_account_number = models.CharField(max_length=64)
     user = models.OneToOneField(User)
@@ -79,4 +80,5 @@ class Bet(models.Model):
     bet_course = models.FloatField(default=0)
     # bet result 0: LOST, 1: WIN
     bet_result = models.IntegerField(default=2, blank=True, choices=BET_RESULTS)
+
 

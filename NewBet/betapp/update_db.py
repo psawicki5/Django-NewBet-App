@@ -5,6 +5,8 @@ from .models import AppUser, User, Competition, Fixture, Team, Bet
 from django.core.exceptions import ObjectDoesNotExist
 
 from random import randint
+from decimal import Decimal
+
 #  Bundesliga 1
 ID = 430
 # season 2016
@@ -305,6 +307,7 @@ def cash_user(bet):
     if bet.bet_result == 1:
         cash_win = bet.bet_amount * bet.bet_course
         app_user.cash += cash_win
+        app_user.cash = round(app_user.cash, 2)
         app_user.save()
 
 

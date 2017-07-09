@@ -1,13 +1,15 @@
 from django.shortcuts import render
 from django.views import View
 from django.views.generic.edit import FormView, CreateView, UpdateView
-from django.contrib.auth.mixins import UserPassesTestMixin, PermissionRequiredMixin, LoginRequiredMixin
+from django.contrib.auth.mixins import UserPassesTestMixin, \
+    PermissionRequiredMixin, LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse_lazy
 
 from .models import *
 from .forms import *
+from .api_connection import get_competitions
 
 
 class CompetitionsView(View):
@@ -87,7 +89,7 @@ class BetFixtureView(LoginRequiredMixin, View):
             bet = form.cleaned_data['bet']
             bet_course = get_bet_course(fixture, bet)
             # check if cash amount is valid
-            if app_user.cash - bet_amount >= 0.0 and bet_amount >= 0.01:
+            if app_user.cash - bet_amount >= 0 and bet_amount >= 0.01:
                 app_user.cash -= bet_amount
                 app_user.save()
                 Bet.objects.create(bet_user=app_user,
@@ -211,4 +213,18 @@ class ShowTeamView(View):
 
         return render(request, "show_team.html", context)
 
+
+class AddCompetitionsView(PermissionRequiredMixin, View):
+    permission_required = ['is_superuser']
+
+    def get(self, request, season):
+        competitions = get_competitions(season=season)
+
+        context = {"competitions": competitions}
+        return render(request, 'list_competitions.html', context)
+
+    def post(self, request, season):
+        selected_copmetitions = request.POST.getlist('competition')
+        print(selected_copmetitions)
+        return redirect(reverse_lazy('competitions'))
 
