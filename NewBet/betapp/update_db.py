@@ -305,9 +305,9 @@ def cash_user(bet):
     # if bet result == 1(winning bet) transfer money to user account
     # this condition is checked just in case...
     if bet.bet_result == 1:
-        cash_win = bet.bet_amount * bet.bet_course
+        cash_win = bet.bet_amount * Decimal(bet.bet_course)
         app_user.cash += cash_win
-        app_user.cash = round(app_user.cash, 2)
+        #app_user.cash = round(app_user.cash, 2)
         app_user.save()
 
 
