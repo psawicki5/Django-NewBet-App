@@ -10,6 +10,7 @@ class Competition(models.Model):
     year = models.IntegerField()
     number_of_teams = models.IntegerField()
     current_matchday = models.IntegerField()
+    api_id = models.IntegerField()
 
     def __str__(self):
         return self.caption

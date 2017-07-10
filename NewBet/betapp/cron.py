@@ -14,11 +14,17 @@ def change_status():
             fixture.save()
 
 
+def update_fixtures_foo():
+    competitons = Competition.objects.all()
+    for competition in competitons:
+        update_fixtures(api_id=competition.api_id)
+
+
 @kronos.register('*/5 * * * *')
 def check_if_fixture_started():
     change_status()
 
 
-@kronos.register('*/30 * * * *')
+@kronos.register('*/10 * * * *')
 def update_fixtures_periodically():
-    update_fixtures()
+    update_fixtures_foo()

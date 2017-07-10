@@ -10,6 +10,7 @@ from django.core.urlresolvers import reverse_lazy
 from .models import *
 from .forms import *
 from .api_connection import get_competitions
+from .update_db import create_competition
 
 
 class CompetitionsView(View):
@@ -225,6 +226,7 @@ class AddCompetitionsView(PermissionRequiredMixin, View):
 
     def post(self, request, season):
         selected_copmetitions = request.POST.getlist('competition')
-        print(selected_copmetitions)
+        for competition_id in selected_copmetitions:
+            create_competition(int(competition_id))
         return redirect(reverse_lazy('competitions'))
 

@@ -209,15 +209,15 @@ def create_fixtures(link_fixtures, competition, league_table):
                        away_win, draw, home_win)
 
 
-def create_competition(competition_id=ID):
+def create_competition(api_id=ID):
     """
     Gets data from competiton json, creates Competition object if doesnt already 
     exist and saves it to db, runst functions that create teams and fixtures 
     related with this competition
-    :param competition_id: int - id of competition in api server
+    :param api_id: int - id of competition in api server
     :param season: int - year of season start
     """
-    data = get_competitions(id=competition_id)
+    data = get_competitions(id=api_id)
     caption = data['caption']
     league = data['league']
     number_of_matchdays = data['numberOfMatchdays']
@@ -233,14 +233,18 @@ def create_competition(competition_id=ID):
     # Try to get competition object of given caption and year, if doesnt exist
     # create new Competition
     try:
-        comp = Competition.objects.get(caption=caption, year=year)
+        comp = Competition.objects.get(caption=caption,
+                                       year=year,
+                                       api_id=api_id
+                                       )
     except ObjectDoesNotExist:
         comp = Competition(caption=caption,
                            league=league,
                            number_of_matchdays=number_of_matchdays,
                            year=year,
                            number_of_teams=number_of_teams,
-                           current_matchday=current_matchday
+                           current_matchday=current_matchday,
+                           api_id=api_id
                            )
         comp.save()
     link_teams = data['_links']['teams']['href']
@@ -355,24 +359,25 @@ def update_fixture(fixture, goals_away_team, goals_home_team):
         check_bets(fixture)
 
 
-def update_fixtures(competition_id=ID, matchday=""):
+def update_fixtures(api_id=ID, matchday=""):
     """
     Updates fixtures with data from api server. 
     Fixtures are updated according to matchday.
-    :param competition_id: int - id of competition in api server
+    :param api_id: int - id of competition in api server
     :param matchday: int - number of matchday
     :return: None
     """
     # gets data from api serer
-    data = get_fixtures(competition_id, matchday)
+    data = get_fixtures(api_id, matchday)
     fixtures_data = data['fixtures']
 
-    competition_data = get_competitions(id=competition_id)
+    competition_data = get_competitions(id=api_id)
     competition_caption = competition_data['caption']
     competition_year = competition_data['year']
 
     competition = Competition.objects.get(caption=competition_caption,
-                                          year=competition_year
+                                          year=competition_year,
+                                          api_id=api_id
                                           )
     # picks needed competition data
     for data_row in fixtures_data:
@@ -393,16 +398,16 @@ def update_fixtures(competition_id=ID, matchday=""):
         if fixture.get_status_display() != "FINISHED":
             update_fixture(fixture, goals_away_team, goals_home_team)
     # updates odds in fixtures after each fixtures update
-    update_odds_in_fixtures(competition_id)
+    update_odds_in_fixtures(api_id)
 
 
-def update_odds_in_fixtures(competition_id):
+def update_odds_in_fixtures(api_id):
     """
     Updates odds for scheduled fixtures
     :param competition_id: int
     :return: None
     """
-    league_table = get_league_table(competition_id)
+    league_table = get_league_table(api_id)
 
     fixtures = Fixture.objects.filter(status=1)
 
