@@ -111,6 +111,7 @@ class LoginView(UserPassesTestMixin, FormView):
     success_url = reverse_lazy('competitions')
 
     def form_valid(self, form):
+        # tests if form is valid
         username = form.cleaned_data['username']
         password = form.cleaned_data['password']
         user = authenticate(self, username=username, password=password)
@@ -133,6 +134,11 @@ class LogoutView(View):
 
 
 def check_if_exists(username):
+    """
+    Checks if user exists in db
+    :param username: string
+    :return: Not empty queryset if user in db else returns empty queryset
+    """
     return User.objects.filter(username=username).exists()
 
 
@@ -145,6 +151,11 @@ class RegisterView(FormView):
     success_url = reverse_lazy('competitions')
 
     def form_valid(self, form):
+        """
+        Adds new AppUser to db
+        :param form: form object
+        :return: redirect to competitions view
+        """
         username = form.cleaned_data['username']
         email = form.cleaned_data['email']
         password = form.cleaned_data['password']
@@ -182,6 +193,10 @@ class AccountDetailsView(LoginRequiredMixin, View):
     login_url = reverse_lazy('login')
 
     def get(self, request):
+        """
+        Displays AppUser's account details
+        :return: html with account details
+        """
         user = request.user
         app_user = AppUser.objects.get(user=user)
         bets = Bet.objects.filter(bet_user=app_user)
@@ -194,12 +209,18 @@ class AccountDetailsView(LoginRequiredMixin, View):
 
 class ShowTeamView(View):
     def get(self, request, team_id):
+        """
+        Displays Team object's details 
+        :param team_id: int - id of Team object in db
+        :return: html with team details
+        """
         team = Team.objects.get(id=team_id)
         competition = team.competition
         team_fixtures_home = Fixture.objects.filter(home_team=team)
         team_fixtures_away = Fixture.objects.filter(away_team=team)
 
-        all_fixtures = [game for game in team_fixtures_away] + [game for game in team_fixtures_home]
+        all_fixtures = [game for game in team_fixtures_away] +\
+                       [game for game in team_fixtures_home]
 
         played_fixtures = [game for game in all_fixtures if game.status == 2]
         scheduled_fixtures = [game for game in all_fixtures if game.status == 1]
@@ -219,12 +240,24 @@ class AddCompetitionsView(PermissionRequiredMixin, View):
     permission_required = ['is_superuser']
 
     def get(self, request, season):
+        """
+        Displays all available teams for season and anables to select them 
+        to be added to db. 
+        Competitions can be added only by superuser!!!
+        :param season: int - season start year
+        :return: renders html with checkboxes for competition selection
+        """
         competitions = get_competitions(season=season)
 
         context = {"competitions": competitions}
         return render(request, 'list_competitions.html', context)
 
     def post(self, request, season):
+        """
+        Adds selected competitions to db
+        :param season: int - season start year
+        :return: redirection to competitions view
+        """
         selected_copmetitions = request.POST.getlist('competition')
         for competition_id in selected_copmetitions:
             create_competition(int(competition_id))

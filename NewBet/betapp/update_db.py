@@ -263,7 +263,7 @@ def get_team(name, competition):
     return Team.objects.get(name=name, competition=competition)
 
 
-def get_fixture(date, away_team_name, home_team_name, matchday, competition):
+def get_fixture(away_team_name, home_team_name, competition):
     """
     Gets Fixture objects and returns it
     :param date: string - date of fixture
@@ -279,8 +279,6 @@ def get_fixture(date, away_team_name, home_team_name, matchday, competition):
     home_team = get_team(home_team_name, competition)
     return Fixture.objects.get(home_team=home_team,
                                away_team=away_team,
-                               date=date,
-                               matchday=matchday,
                                competition=competition
                                )
 
@@ -359,7 +357,7 @@ def update_fixture(fixture, goals_away_team, goals_home_team):
         check_bets(fixture)
 
 
-def update_fixtures(api_id=ID, matchday=""):
+def update_fixtures(api_id, matchday=""):
     """
     Updates fixtures with data from api server. 
     Fixtures are updated according to matchday.
@@ -379,24 +377,23 @@ def update_fixtures(api_id=ID, matchday=""):
                                           year=competition_year,
                                           api_id=api_id
                                           )
+
     # picks needed competition data
     for data_row in fixtures_data:
-        date = data_row['date']
-        away_team_name = data_row['awayTeamName']
-        home_team_name = data_row['homeTeamName']
-        matchday = data_row['matchday']
-        goals_away_team = data_row['result']['goalsAwayTeam']
-        goals_home_team = data_row['result']['goalsHomeTeam']
-        # fixture_status = data_row['status']
-
-        fixture = get_fixture(date,
-                              away_team_name,
-                              home_team_name,
-                              matchday,
-                              competition
-                              )
-        if fixture.get_status_display() != "FINISHED":
-            update_fixture(fixture, goals_away_team, goals_home_team)
+        fixture_status = data_row['status']
+        if fixture_status == "FINISHED":
+            away_team_name = data_row['awayTeamName']
+            home_team_name = data_row['homeTeamName']
+            fixture = get_fixture(away_team_name,
+                                  home_team_name,
+                                  competition
+                                  )
+            if fixture.get_status_display() != "FINISHED":
+                date = data_row['date']
+                matchday = data_row['matchday']
+                goals_away_team = data_row['result']['goalsAwayTeam']
+                goals_home_team = data_row['result']['goalsHomeTeam']
+                update_fixture(fixture, goals_away_team, goals_home_team)
     # updates odds in fixtures after each fixtures update
     update_odds_in_fixtures(api_id)
 
@@ -404,12 +401,12 @@ def update_fixtures(api_id=ID, matchday=""):
 def update_odds_in_fixtures(api_id):
     """
     Updates odds for scheduled fixtures
-    :param competition_id: int
+    :param api_id: int
     :return: None
     """
     league_table = get_league_table(api_id)
 
-    fixtures = Fixture.objects.filter(status=1)
+    fixtures = Fixture.objects.filter(status=1, competition__api_id=api_id)
 
     for fixture in fixtures:
         home_team_name = fixture.home_team.name
@@ -419,8 +416,3 @@ def update_odds_in_fixtures(api_id):
         fixture.course_draw = odds['draw']
         fixture.course_team_away_win = odds['away_win']
         fixture.save()
-
-
-"from betapp.update_db import *"
-"create_competition()"
-'update_fixtures(matchday=1)'
