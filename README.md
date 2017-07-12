@@ -1,6 +1,5 @@
 ## NewBetApp
-___
-
+  
 Betting aplication based on Django.   
 Application uses the http://www.football-data.org API server for football data.  
 API provides competitions, teams, fixtures, teams etc.  
@@ -9,7 +8,8 @@ Program schedules fixtures, automatically checks if fixture have started/finishe
 calculates bet payout (if bet has benn won). Application also calculates odds of fixtures   
 based on current league table. Odds are recalculated after each matchday.
 Automatic checks are made by means of Kronos.  
----
+  
+  
 Steps to setup application:
 * register on http://www.football-data.org and get your api key.  
 * in module api_connection.py find function url_conn and assign your key to api_key variable.  
