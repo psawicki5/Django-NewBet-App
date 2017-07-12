@@ -16,7 +16,7 @@ def url_conn(url):
     :param url: string - query
     :return: json
     """
-    api_key = "42a9d88dc690467b91d18285e9d6c9a8"
+    api_key = "" # your key goes here
     headers = {'X-Auth-Token': api_key}
     response = requests.get(url, verify=True, headers=headers)
     if response.status_code != 200:
