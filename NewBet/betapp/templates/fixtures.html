@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>{{ competition.caption }}</h1>
+<a href="{% url 'competition-table' competition.id %}">League Table</a>
 <ul>
     {% for fixture in fixtures %}
     <li>{{fixture.date}} | <a href="{% url 'show-team' fixture.home_team.id %}">{{ fixture.home_team.name }}</a> - <a href="{% url 'show-team' fixture.away_team.id %}">{{ fixture.away_team.name }}</a> | matchday: {{ fixture.matchday }}

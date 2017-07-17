@@ -10,7 +10,7 @@ from django.views.generic.list import ListView
 
 from .models import *
 from .forms import *
-from .api_connection import get_competitions
+from .api_connection import get_competitions, get_league_table
 from .update_db import create_competition
 
 
@@ -38,6 +38,25 @@ class CompetitionView(View):
                    "fixtures": fixtures
                    }
         return render(request, 'fixtures.html', context)
+
+
+class CompetitionTableView(View):
+    def get(self, request, id):
+        competition = Competition.objects.get(id=id)
+        api_id = competition.api_id
+        league_table = get_league_table(api_id)
+        table = []
+        for team in league_table['standing']:
+            table.append({"position": team['position'],
+                          "name": team['teamName'],
+                          "games": team['playedGames'],
+                          "wins": team['wins'],
+                          "draws": team['draws'],
+                          "losses": team['losses'],
+                          "points": team['points'],
+                          })
+        context = {"table": table, "competition": competition}
+        return render(request, 'league_table.html', context)
 
 
 def get_bet_course(fixture, bet):

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ competition.caption }}</h1>
+<table>
+    <tr>
+        <th>Position</th>
+        <th>Team</th>
+        <th>Games</th>
+        <th>Wins</th>
+        <th>Draws</th>
+        <th>Losses</th>
+        <th>Points</th>
+    </tr>
+    {% for team in table %}
+    <tr>
+        <td>{{ team.position }}</td>
+        <td>{{ team.name }}</td>
+        <td>{{ team.games }}</td>
+        <td>{{ team.wins }}</td>
+        <td>{{ team.draws }}</td>
+        <td>{{ team.losses }}</td>
+        <td>{{ team.points }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

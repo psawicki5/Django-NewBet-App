@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{% static 'betapp/betapp.css' %}">
 </head>
 <header class="page-header">
-    <h1>NewBetApp</h1>
+    <a href="{% url 'competitions' %}"><h1>NewBetApp</h1></a>
     <p>
         {% if user.username %}
         Logged user: {{ user.username }}<br>
