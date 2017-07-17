@@ -21,7 +21,7 @@ from betapp.views import *
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^competitions/', CompetitionsView.as_view(), name="competitions"),
+    url(r'^$', CompetitionsView.as_view(), name="competitions"),
     url(r'^competition/(?P<id>[\d]+)', CompetitionView.as_view(),
         name="competition"),
     url(r'^login/', LoginView.as_view(), name="login"),

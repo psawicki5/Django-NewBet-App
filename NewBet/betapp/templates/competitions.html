@@ -2,7 +2,7 @@
 {% block content %}
 <h2>Competitons</h2>
 <ul>
-    {% for competition in competitions %}
+    {% for competition in competition_list %}
     <li><a href="{% url 'competition' competition.id %}">{{ competition.caption }}</a></li>
     {% endfor %}
 </ul>

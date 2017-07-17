@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin, \
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse_lazy
+from django.views.generic.list import ListView
 
 from .models import *
 from .forms import *
@@ -13,15 +14,12 @@ from .api_connection import get_competitions
 from .update_db import create_competition
 
 
-class CompetitionsView(View):
-    def get(self, request):
-        """
-        Displays all competitions in db
-        :return: rendered html with all competitions
-        """
-        competitions = Competition.objects.all()
-        context = {"competitions": competitions}
-        return render(request, 'competitions.html', context)
+class CompetitionsView(ListView):
+    """
+    Displays all competitions
+    """
+    model = Competition
+    template_name = "competitions.html"
 
 
 class CompetitionView(View):

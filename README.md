@@ -27,7 +27,7 @@ Default localhost sites:
 * localhost:8000/add_competitions/{year} page with available competitions for given year,  
 only superuser can add competitions.  
 * localhost:8000/admin admin panel  
-* localhost:8000/competitions main page with listed competitions  
+* localhost:8000/ main page with listed competitions  
 * localhost:8000/competition/{id} page with listed fixtures for competition with given id  
 * localhost:8000/login displays form to login to app  
 * localhost:8000/logout view that logs out current user
