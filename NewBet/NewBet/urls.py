@@ -24,6 +24,8 @@ urlpatterns = [
     url(r'^$', CompetitionsView.as_view(), name="competitions"),
     url(r'^competition/(?P<id>[\d]+)', CompetitionView.as_view(),
         name="competition"),
+    url(r'^finished_fixtures/(?P<id>[\d]+)', FinishedFixturesView.as_view(),
+        name="finished-fixtures"),
     url(r'^competition_table/(?P<id>[\d]+)', CompetitionTableView.as_view(),
         name="competition-table"),
     url(r'^login/', LoginView.as_view(), name="login"),

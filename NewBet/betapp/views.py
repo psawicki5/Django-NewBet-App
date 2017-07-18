@@ -280,3 +280,16 @@ class AddCompetitionsView(PermissionRequiredMixin, View):
             create_competition(int(competition_id))
         return redirect(reverse_lazy('competitions'))
 
+
+class FinishedFixturesView(View):
+    def get(self, request, id):
+        competition = Competition.objects.get(id=id)
+        finished_fixtures = Fixture.objects.filter(competition=competition,
+                                                 status=2)
+        context = {"competition": competition,
+                   "finished_fixtures": finished_fixtures
+                   }
+        return render(request, 'finished_fixtures.html', context)
+
+
+

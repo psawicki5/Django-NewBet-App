@@ -4,7 +4,7 @@ venv/
 tags
 
 # Created by https://www.gitignore.io/api/pydev,django,python,pycharm
-
+api_key
 ### Django ###
 *.log
 *.pot
