@@ -34,4 +34,5 @@ only superuser can add competitions.
 * localhost:8000/register displays form that adds new app user that can make bets
 * localhost:8000/bet_fixture/{id} displays form that enables betting fixture with given id  
 * localhost:8000/account_details/{id} displays page with account details such as amount of cash, pending/finished bets etc for app user with given id
-* localhost:8000/show_team/{id} displays detailed data such as team home/away fixtures etc for team with given id in db.
+* localhost:8000/show_team/{id} displays detailed data such as team home/away fixtures etc for team with given id in db.  
+* localhost:8000/competition_table/{id} displays league table for competition with given {id} in DB
