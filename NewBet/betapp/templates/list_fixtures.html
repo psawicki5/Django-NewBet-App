@@ -1,0 +1,27 @@
+{% block fixtures_list %}
+<ul>
+    {% for fixture in fixtures %}
+        <li>{{fixture.date}} |
+            <a href="{% url 'show-team' fixture.home_team.id %}">
+                <span class="home-team-name">{{ fixture.home_team.name }}</span>
+            </a> -
+            <a href="{% url 'show-team' fixture.away_team.id %}">
+                <span class="away-team-name">{{ fixture.away_team.name }}</span>
+            </a> | matchday: <span class="matchday">{{ fixture.matchday }}</span>
+            {% if  fixture.goals_home_team >= 0 %}
+            RESULT: {{ fixture.goals_home_team }} : {{ fixture.goals_away_team }}
+            {% endif %}
+            <br>
+            ODDS:
+            <ol>
+                <li> Home win: {{ fixture.course_team_home_win }}</li>
+                <li> Draw: {{ fixture.course_draw }}</li>
+                <li> Away win: {{ fixture.course_team_away_win }}</li>
+            </ol>
+            {% if fixture.status == 1 %}
+                <a href="{% url 'bet-fixture' fixture.id %}">Bet fixture</a>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+{% endblock %}
