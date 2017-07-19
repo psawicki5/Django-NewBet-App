@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block head %}
 {% load static %}
-<script src="{% static 'betapp/js/show-fxtures.js' %}"></script>
+<script src="{% static 'betapp/js/show-fixtures.js' %}"></script>
 {% endblock %}
 {% block content %}
 <h1>{{ team.name }}</h1>
@@ -9,23 +9,23 @@
 
 {% include "links.html" %}
 {% include "fixtures_filter.html" %}
-<h4><span>Team fixtures home</span></h4>
+<h4><span class="fixtures-description">Team fixtures home</span></h4>
 <div id="team-fixtures-home">
     {% include "list_fixtures.html" with fixtures=team_fixtures_home %}
 </div>
 
 
-<h4><span>Team fixtures away<span></h4>
+<h4><span class="fixtures-description">Team fixtures away<span></h4>
 <div id="team-fixtures-home">
     {% include "list_fixtures.html" with fixtures=team_fixtures_away %}
 </div>
 
-<h4><span>Played team fixtures<span></h4>
+<h4><span class="fixtures-description">Played team fixtures<span></h4>
 <div id="team-fixtures-played">
     {% include "list_fixtures.html" with fixtures=played_fixtures %}
 </div>
 
-<h4><span>Scheduled team fixtures<span></h4>
+<h4><span class="fixtures-description">Scheduled team fixtures<span></h4>
 <div id="team-fixtures-scheduled">
     {% include "list_fixtures.html" with fixtures=scheduled_fixtures %}
 </div>
