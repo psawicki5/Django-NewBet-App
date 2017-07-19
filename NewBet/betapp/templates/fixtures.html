@@ -1,35 +1,9 @@
 {% extends 'base.html' %}
-{% block head %}
-{% load static %}
-<script src="{% static 'betapp/js/fixtures-filter.js' %}"></script>
-{% endblock %}
+{% block head %}{% endblock %}
 {% block content %}
 <h1>{{ competition.caption }}</h1>
-<a href="{% url 'competition-table' competition.id %}">League Table</a><br>
-<a href="{% url 'finished-fixtures' competition.id %}">Finished Fixtures</a>
-<div id="search">
-    <label>Filter by matchday or team name:<br>
-        <input type="text" id="match-filter">
-    </label><br>
-</div>
-<ul>
-    {% for fixture in fixtures %}
-    <div class="list">
-        <li>{{fixture.date}} |
-            <a href="{% url 'show-team' fixture.home_team.id %}">
-                <span class="home-team-name">{{ fixture.home_team.name }}</span>
-            </a> -
-            <a href="{% url 'show-team' fixture.away_team.id %}">
-                <span class="away-team-name">{{ fixture.away_team.name }}</span>
-            </a> | matchday: <span class="matchday">{{ fixture.matchday }}</span><br>
-            ODDS:
-            <ol>
-                <li> Home win: {{ fixture.course_team_home_win }}</li>
-                <li> Draw: {{ fixture.course_draw }}</li>
-                <li> Away win: {{ fixture.course_team_away_win }}</li>
-            </ol>
-        </li>
-    </div>
-    {% endfor %}
-</ul>
+{% include "links.html" %}
+{% include "fixtures_filter.html" %}
+
+{% include "list_fixtures.html" with fixtures=fixtures %}
 {% endblock %}

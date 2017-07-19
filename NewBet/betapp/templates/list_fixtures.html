@@ -1,6 +1,7 @@
 {% block fixtures_list %}
 <ul>
     {% for fixture in fixtures %}
+    <div class="list">
         <li>{{fixture.date}} |
             <a href="{% url 'show-team' fixture.home_team.id %}">
                 <span class="home-team-name">{{ fixture.home_team.name }}</span>
@@ -22,6 +23,7 @@
                 <a href="{% url 'bet-fixture' fixture.id %}">Bet fixture</a>
             {% endif %}
         </li>
+    </div>
     {% endfor %}
 </ul>
 {% endblock %}

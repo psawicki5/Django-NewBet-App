@@ -7,8 +7,8 @@
 <h1>{{ team.name }}</h1>
 <h3>{{ competition.caption }}</h3>
 
-<a href="{% url 'competitions' %}">Competitions</a>
-
+{% include "links.html" %}
+{% include "fixtures_filter.html" %}
 <h4><span>Team fixtures home</span></h4>
 <div id="team-fixtures-home">
     {% include "list_fixtures.html" with fixtures=team_fixtures_home %}
