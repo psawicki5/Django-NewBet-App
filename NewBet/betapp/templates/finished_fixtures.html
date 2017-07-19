@@ -9,18 +9,15 @@
 <h1>{{ competition.caption }}</h1>
 <a href="{% url 'competition-table' competition.id %}">League Table</a><br>
 <div id="search">
-    <label>Filter by matchday:<br>
-        <input type="text" id="matchday-filter">
+    <label>Filter by matchday or team name:<br>
+        <input type="text" id="match-filter">
     </label><br>
-    <label>Filter by team name:<br>
-        <input type="text" id="team-name-filter">
-    </label>
 </div>
 
 <ul>
     {% for fixture in finished_fixtures %}
     <div class="list">
-        <li>{{fixture.date}} | <a href="{% url 'show-team' fixture.home_team.id %}"><span class="team-name">{{ fixture.home_team.name }}</span></a> - <a href="{% url 'show-team' fixture.away_team.id %}"><span class="team-name">{{ fixture.away_team.name }}</span></a> | matchday: <span class="matchday">{{ fixture.matchday }}</span>
+        <li>{{fixture.date}} | <a href="{% url 'show-team' fixture.home_team.id %}"><span class="home-team-name">{{ fixture.home_team.name }}</span></a> - <a href="{% url 'show-team' fixture.away_team.id %}"><span class="away-team-name">{{ fixture.away_team.name }}</span></a> | matchday: <span class="matchday">{{ fixture.matchday }}</span>
             RESULT: {{ fixture.goals_home_team }} : {{ fixture.goals_away_team }}<br>
             ODDS:
             <ol>
