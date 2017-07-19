@@ -1,8 +1,9 @@
 $(document).ready(function () {
-    var fixtures_spans = $('.fixtures-description')
-    $(fixtures_spans).each(function(){
-        $(this).click(function(){
-            $(this).parent().next().toggle()
+    var fixture_a = $('.fixtures-description');
+    $(fixture_a).each(function(){
+        $(this).click(function(event){
+            event.preventDefault();
+            $(this).next().toggle();
         })
     })
 });

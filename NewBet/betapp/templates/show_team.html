@@ -9,24 +9,24 @@
 
 {% include "links.html" %}
 {% include "fixtures_filter.html" %}
-<h4><span class="fixtures-description">Team fixtures home</span></h4>
-<div id="team-fixtures-home">
+<a class="fixtures-description" href="">Team fixtures home</a>
+<div>
     {% include "list_fixtures.html" with fixtures=team_fixtures_home %}
 </div>
-
-
-<h4><span class="fixtures-description">Team fixtures away<span></h4>
-<div id="team-fixtures-home">
+<br>
+<a class="fixtures-description" href="">Team fixtures away</a>
+<div>
     {% include "list_fixtures.html" with fixtures=team_fixtures_away %}
 </div>
-
-<h4><span class="fixtures-description">Played team fixtures<span></h4>
-<div id="team-fixtures-played">
+<br>
+<a class="fixtures-description" href="">Played team fixtures</a>
+<div>
     {% include "list_fixtures.html" with fixtures=played_fixtures %}
 </div>
-
-<h4><span class="fixtures-description">Scheduled team fixtures<span></h4>
-<div id="team-fixtures-scheduled">
+<br>
+<a class="fixtures-description" href="">Scheduled team fixtures</a>
+<div>
     {% include "list_fixtures.html" with fixtures=scheduled_fixtures %}
 </div>
+<br>
 {% endblock %}

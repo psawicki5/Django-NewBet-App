@@ -59,5 +59,10 @@ body {
 
 td, th {
     text-align:center;
-    padding: 4px;
+
+}
+
+a.fixtures-description {
+    font-family: 'Lobster', cursive;
+    font-size: 14pt;
 }
