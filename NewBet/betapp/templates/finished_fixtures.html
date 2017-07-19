@@ -2,7 +2,7 @@
 
 {% block head %}
 {% load static %}
-<script src="{% static 'betapp/js/finished_fixtures.js' %}"></script>
+<script src="{% static 'betapp/js/fixtures-filter.js' %}"></script>
 {% endblock %}
 
 {% block content %}
@@ -17,7 +17,13 @@
 <ul>
     {% for fixture in finished_fixtures %}
     <div class="list">
-        <li>{{fixture.date}} | <a href="{% url 'show-team' fixture.home_team.id %}"><span class="home-team-name">{{ fixture.home_team.name }}</span></a> - <a href="{% url 'show-team' fixture.away_team.id %}"><span class="away-team-name">{{ fixture.away_team.name }}</span></a> | matchday: <span class="matchday">{{ fixture.matchday }}</span>
+        <li>{{fixture.date}} |
+            <a href="{% url 'show-team' fixture.home_team.id %}">
+                <span class="home-team-name">{{ fixture.home_team.name }}</span>
+            </a> -
+            <a href="{% url 'show-team' fixture.away_team.id %}">
+                <span class="away-team-name">{{ fixture.away_team.name }}</span>
+            </a> | matchday: <span class="matchday">{{ fixture.matchday }}</span>
             RESULT: {{ fixture.goals_home_team }} : {{ fixture.goals_away_team }}<br>
             ODDS:
             <ol>

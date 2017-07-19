@@ -4,7 +4,6 @@ $(document).ready(function () {
       return  filter_value === matchday;
     };
     var comparison_team_name = function(filter_value, home_team, away_team){
-        console.log(home_team.includes(filter_value));
       return  (home_team.includes(filter_value) ||
       away_team.includes(filter_value));
     };
