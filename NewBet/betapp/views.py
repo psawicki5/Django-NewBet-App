@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import View
-from django.views.generic.edit import FormView, CreateView, UpdateView
+from django.views.generic.edit import FormView
 from django.contrib.auth.mixins import UserPassesTestMixin, \
     PermissionRequiredMixin, LoginRequiredMixin
 from django.contrib.auth import authenticate, login, logout
@@ -76,6 +76,7 @@ def get_bet_course(fixture, bet):
 
 class BetFixtureView(LoginRequiredMixin, View):
     login_url = reverse_lazy('login')
+    redirect_field_name = "next"
 
     def get(self, request, id):
         """
@@ -116,37 +117,6 @@ class BetFixtureView(LoginRequiredMixin, View):
                                    bet=bet,
                                    bet_course=bet_course
                                    )
-        return redirect(reverse_lazy('competitions'))
-
-
-class LoginView(UserPassesTestMixin, FormView):
-    def test_func(self):
-        # tests if user is authenticated
-        return not self.request.user.is_authenticated
-    template_name = "login_form.html"
-    form_class = LoginForm
-    success_url = reverse_lazy('competitions')
-
-    def form_valid(self, form):
-        # tests if form is valid
-        username = form.cleaned_data['username']
-        password = form.cleaned_data['password']
-        user = authenticate(self, username=username, password=password)
-        if user is not None:
-            login(self.request, user)
-        else:
-            messages = ["Wrong username or password"]
-            form = LoginForm()
-            context = {"messages": messages,
-                       "form": form
-                       }
-            return render(self.request, "login_form.html", context)
-        return super(LoginView, self).form_valid(form)
-
-
-class LogoutView(View):
-    def get(self, request):
-        logout(request)
         return redirect(reverse_lazy('competitions'))
 
 

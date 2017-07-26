@@ -1,10 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
-{% for message in messages %}
-    <p>{{ message }}</p>
-{% endfor %}
 <div class="form">
     <form action="" method="POST">
+        {% if form.errors %}
+            <p>Wrong username or password</p>
+        {% else %}
+            <p>Type in username and password to login</p>
+        {% endif %}
         {% csrf_token %}
         {% for field in form %}
             {{ field.label_tag }}<br>

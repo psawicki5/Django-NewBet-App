@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from django.contrib.auth import views as av
+
 
 from betapp.views import *
 
@@ -28,8 +30,9 @@ urlpatterns = [
         name="finished-fixtures"),
     url(r'^competition_table/(?P<id>[\d]+)', CompetitionTableView.as_view(),
         name="competition-table"),
-    url(r'^login/', LoginView.as_view(), name="login"),
-    url(r'^logout/', LogoutView.as_view(), name="logout"),
+    url(r'^login/', av.LoginView.as_view(
+        template_name="register/login_form.html"), name="login"),
+    url(r'^logout/', av.LogoutView.as_view(next_page="/"), name="logout"),
     url(r'^register/', RegisterView.as_view(), name="register"),
     url(r'^bet_fixture/(?P<id>[\d]+)', BetFixtureView.as_view(),
         name="bet-fixture"),
