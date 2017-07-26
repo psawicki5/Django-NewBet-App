@@ -7,6 +7,11 @@ from .models import Bet
 
 @task
 def bet_created(bet_id):
+    """
+    Sends email with confirmation of creating new bet
+    :param bet_id: int
+    :return: True if mail sending was successfull, else False
+    """
     bet = Bet.objects.get(id=bet_id)
     bet_owner = bet.bet_user
     user = User.objects.get(id=bet_owner.id)
