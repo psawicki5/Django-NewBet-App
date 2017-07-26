@@ -139,3 +139,6 @@ LOGIN_REDIRECT_URL = reverse_lazy('competitions')
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 15 * 60
+
+# Email
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

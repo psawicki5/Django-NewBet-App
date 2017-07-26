@@ -11,6 +11,7 @@ from .models import *
 from .forms import *
 from .api_connection import get_competitions, get_league_table
 from .update_db import create_competition
+from .tasks import bet_created
 
 
 class CompetitionsView(ListView):
@@ -109,12 +110,13 @@ class BetFixtureView(LoginRequiredMixin, View):
             if app_user.cash - bet_amount >= 0 and bet_amount >= 0.01:
                 app_user.cash -= bet_amount
                 app_user.save()
-                Bet.objects.create(bet_user=app_user,
-                                   bet_amount=bet_amount,
-                                   fixture=fixture,
-                                   bet=bet,
-                                   bet_course=bet_course
-                                   )
+                bet = Bet.objects.create(bet_user=app_user,
+                                         bet_amount=bet_amount,
+                                         fixture=fixture,
+                                         bet=bet,
+                                         bet_course=bet_course
+                                         )
+                bet_created.delay(bet.id)
         return redirect(reverse_lazy('competitions'))
 
 
