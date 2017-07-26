@@ -134,3 +134,8 @@ STATICFILES_DIRS = (
 LOGIN_URL = reverse_lazy("login")
 LOGOUT_URL = reverse_lazy("logout")
 LOGIN_REDIRECT_URL = reverse_lazy('competitions')
+
+# Session
+SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 15 * 60

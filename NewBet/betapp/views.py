@@ -1,9 +1,8 @@
 from django.shortcuts import render
 from django.views import View
 from django.views.generic.edit import FormView
-from django.contrib.auth.mixins import UserPassesTestMixin, \
-    PermissionRequiredMixin, LoginRequiredMixin
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import PermissionRequiredMixin, \
+    LoginRequiredMixin
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic.list import ListView
@@ -75,7 +74,6 @@ def get_bet_course(fixture, bet):
 
 
 class BetFixtureView(LoginRequiredMixin, View):
-    login_url = reverse_lazy('login')
     redirect_field_name = "next"
 
     def get(self, request, id):
@@ -177,7 +175,7 @@ class RegisterView(FormView):
 
 
 class AccountDetailsView(LoginRequiredMixin, View):
-    login_url = reverse_lazy('login')
+    redirect_field_name = 'next'
 
     def get(self, request):
         """
