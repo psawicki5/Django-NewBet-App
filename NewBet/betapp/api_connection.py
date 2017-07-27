@@ -54,14 +54,15 @@ def get_fixtures(competition_id, matchday):
     return url_conn(url)
 
 
-def get_league_table(competition_id):
+def get_league_table(competition_id, matchday=""):
     """
     Returns league table for competition and given matchday
     :param competition_id: int - competition id in api server
     :return: json data with league table
     """
     url = "http://api.football-data.org/v1/" \
-          "competitions/{}/leagueTable".format(competition_id)
+          "competitions/{}/leagueTable?matchday={}".format(competition_id,
+                                                            matchday)
     return url_conn(url)
 
 

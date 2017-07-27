@@ -1,18 +1,25 @@
 from .api_connection import url_conn, get_competitions, get_fixtures, \
     get_team_last_fixtures, get_league_table
 from .models import AppUser, User, Competition, Fixture, Team, Bet
-#from .views import r
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
+from django.conf import settings
 
 from random import randint
 from decimal import Decimal
+
+import redis
 
 
 #  Bundesliga 1
 ID = 430
 # season 2016
+
+r = redis.StrictRedis(host=settings.REDIS_HOST,
+                      port=settings.REDIS_PORT,
+                      db=settings.REDIS_DB,
+                      decode_responses=True)
 
 
 def create_team(name, crest_url, code, short_name, competition):
@@ -421,14 +428,20 @@ def update_odds_in_fixtures(api_id):
         fixture.save()
 
 
-def create_team_standing(league_id=394):
+def create_team_standing(league_id=430):
     league_table = get_league_table(league_id)
     competition = get_object_or_404(Competition,
                                     caption=league_table['leagueCaption'])
     matchday = league_table['matchday']
-    for team in league_table['standing']:
-        team_name = team['teamName']
+    for row in league_table['standing']:
+        team_name = row['teamName']
         team = get_object_or_404(Team, name=team_name, competition=competition)
-        position = team['position']
-        print(competition, team)
+        position = row['position']
+        #print(competition, team, position)
+        list_name = "{}:{}:standing".format(competition.id, team.id)
+        if not r.hexists(list_name, matchday):
+            r.hset(list_name, matchday, position)
+        #print(len(r.hgetall(list_name)))
+
+
 
