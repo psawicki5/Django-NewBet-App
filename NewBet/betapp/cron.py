@@ -19,7 +19,6 @@ def update_fixtures_foo():
     for competition in competitons:
         update_fixtures(api_id=competition.api_id)
 
-
 @kronos.register('*/3 * * * *')
 def check_fixtures():
     change_status()

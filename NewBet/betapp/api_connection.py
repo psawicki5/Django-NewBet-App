@@ -71,8 +71,6 @@ def get_team_last_fixtures(team_api_id):
     :param team_api_id: int - id of team in api server
     :return: json data with last 15 fixtures of team
     """
-    # Because of some API limitations, getting last 15
-    # fixtures not is made optimally.
     # TODO: Optimize getting last 15 fixtures
     time_frame_stop = date.today().year
     time_frame_start = date.today().year - 1
@@ -85,7 +83,6 @@ def get_team_last_fixtures(team_api_id):
         if row['status'] == "FINISHED":
             new_data.append(row)
     return new_data[:15]
-
 
 #print(get_league_table(394))
 #print(get_competitions(id="394"))

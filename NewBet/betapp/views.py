@@ -6,6 +6,9 @@ from django.contrib.auth.mixins import PermissionRequiredMixin, \
 from django.shortcuts import redirect
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic.list import ListView
+from django.conf import settings
+
+import redis
 
 from .models import *
 from .forms import *
@@ -13,6 +16,10 @@ from .api_connection import get_competitions, get_league_table
 from .update_db import create_competition
 from .tasks import bet_created
 
+
+r = redis.StrictRedis(host=settings.REDIS_HOST,
+                      port=settings.REDIS_PORT,
+                      db=settings.REDIS_DB)
 
 class CompetitionsView(ListView):
     """

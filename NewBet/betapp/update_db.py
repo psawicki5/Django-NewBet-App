@@ -1,11 +1,14 @@
 from .api_connection import url_conn, get_competitions, get_fixtures, \
     get_team_last_fixtures, get_league_table
 from .models import AppUser, User, Competition, Fixture, Team, Bet
+#from .views import r
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import get_object_or_404
 
 from random import randint
 from decimal import Decimal
+
 
 #  Bundesliga 1
 ID = 430
@@ -416,3 +419,16 @@ def update_odds_in_fixtures(api_id):
         fixture.course_draw = odds['draw']
         fixture.course_team_away_win = odds['away_win']
         fixture.save()
+
+
+def create_team_standing(league_id=394):
+    league_table = get_league_table(league_id)
+    competition = get_object_or_404(Competition,
+                                    caption=league_table['leagueCaption'])
+    matchday = league_table['matchday']
+    for team in league_table['standing']:
+        team_name = team['teamName']
+        team = get_object_or_404(Team, name=team_name, competition=competition)
+        position = team['position']
+        print(competition, team)
+
