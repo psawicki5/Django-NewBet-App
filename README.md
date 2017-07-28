@@ -7,8 +7,11 @@ Program allows user to bet fixtures. User can bet home win, draw or away win.
 Program schedules fixtures, automatically checks if fixture have started/finished and  
 calculates bet payout (if bet has benn won). Application also calculates odds of fixtures   
 based on current league table. Odds are recalculated after each matchday.
-Automatic checks are made by means of Kronos.  
-  
+Automatic checks are made by means of Kronos. After making bet, confirmation email is sent to user.
+Mail sending was made as a asynchronous task by means of Celery. Also history of teams standings 
+is provided. Standings are stored as dictionary on redis server, and are shared through REST api.
+On basis of standings received from API server, on team details page you can see plot 
+with history of team standings up to current matchday. 
   
 Steps to setup application:
 * register on http://www.football-data.org and get your api key.  
@@ -16,10 +19,12 @@ Steps to setup application:
 * migrate db   
 * create superuser  
 * install kronos tasks by typing in ./manage.py installtasks
-* runserver
+* run redis server
+* run rabbitmq server
+* runserver Django development server
 * login as superuser
 * go to localhost:8000/add_competitions/2017 and check competitions that you want to follow/bet  
-* now you can create app user using register button and bet fixtures  
+* now you can create app_user using register button and bet fixtures  
   
 Fixtures are updated once every 3 minutes automatically.
 
@@ -36,3 +41,4 @@ only superuser can add competitions.
 * localhost:8000/account_details/{id} displays page with account details such as amount of cash, pending/finished bets etc for app user with given id
 * localhost:8000/show_team/{id} displays detailed data such as team home/away fixtures etc for team with given id in db.  
 * localhost:8000/competition_table/{id} displays league table for competition with given {id} in DB
+* localhost:8000/team_standings/{competition_id}/{team_id} returns json with two lists (for team with {competition_id} and {team_id} in DB), first is matchdays, second is standings 

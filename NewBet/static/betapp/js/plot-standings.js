@@ -22,9 +22,6 @@ $(document).ready(function(){
         });
     };
     var plotting_function = function(json){
-        console.log(json['matchday_list'])
-        console.log(json['standing_list'])
-
         var trace = {
             x: json['matchday_list'],
             y: json['standing_list'],
@@ -64,6 +61,5 @@ $(document).ready(function(){
         Plotly.newPlot('team-standings', data, layout)
     };
     ajax_function(competition_id, team_id)
-
 });
 
