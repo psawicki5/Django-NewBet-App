@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 {% block head %}
 {% load static %}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script src="{% static 'betapp/js/show-fixtures.js' %}"></script>
+<script src="{% static 'betapp/js/plot-standings.js' %}"></script>
 {% endblock %}
 {% block content %}
 <h1>{{ team.name }}</h1>
@@ -10,6 +12,8 @@
 {% include "links.html" %}
 {% include "fixtures_filter.html" %}
 <h3>League position</h3>
+<div id="team-standings" data-competition-id="{{competition.id}}" data-team-id="{{team.id}}">
+</div>
 <br>
 <a class="fixtures-description" href="">Team fixtures home</a>
 <div>

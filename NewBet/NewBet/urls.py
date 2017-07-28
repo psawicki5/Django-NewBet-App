@@ -42,5 +42,7 @@ urlpatterns = [
         name="show-team"),
     url(r'^add_competitions/(?P<season>[\d]+)', AddCompetitionsView.as_view(),
         name="add-competitions"),
+    url(r'^team_standings/(?P<competition_id>[\d]+)/(?P<team_id>[\d]+)',
+        TeamStandingsView.as_view(), name="team-standings"),
 ]
 

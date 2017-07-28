@@ -7,8 +7,9 @@ from django.shortcuts import redirect
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic.list import ListView
 from django.conf import settings
-from django.shortcuts import get_object_or_404
-from django.http import HttpResponse
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 import redis
 
@@ -205,12 +206,18 @@ class AccountDetailsView(LoginRequiredMixin, View):
         return render(request, "my_account.html", context)
 
 
-def get_team_standings(competition, team):
-    list_name = "{}:{}:standing".format(competition.id, team.id)
-    standings = r.hgetall(list_name)
-    matchday_list = sorted([int(i) for i in standings.keys()])
-    standing_list = [int(standings[str(matchday)])for matchday in matchday_list]
-    return matchday_list, standing_list
+class TeamStandingsView(APIView):
+    def get(self, request, competition_id, team_id):
+        print(competition_id, team_id)
+        list_name = "{}:{}:standing".format(competition_id, team_id)
+        standings = r.hgetall(list_name)
+        matchday_list = sorted([int(i) for i in standings.keys()])
+        standing_list = [int(standings[str(mday)])for mday in matchday_list]
+        data = {"matchday_list": matchday_list,
+                "standing_list": standing_list
+                }
+        return Response(data)
+
 
 
 class ShowTeamView(View):
