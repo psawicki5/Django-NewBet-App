@@ -2,7 +2,7 @@ import kronos
 
 from django.utils import timezone
 from .models import *
-from .update_db import update_fixtures
+from .update_db import update_fixtures, create_team_standing
 
 
 def change_status():
@@ -18,6 +18,8 @@ def update_fixtures_foo():
     competitons = Competition.objects.all()
     for competition in competitons:
         update_fixtures(api_id=competition.api_id)
+        create_team_standing(competition_id=competition.id)
+
 
 @kronos.register('*/3 * * * *')
 def check_fixtures():

@@ -428,13 +428,14 @@ def update_odds_in_fixtures(api_id):
         fixture.save()
 
 
-def create_team_standing(league_id=430):
-    league_table = get_league_table(league_id)
+def create_team_standing(competition_id=430):
+    league_table = get_league_table(competition_id)
     competition = get_object_or_404(Competition,
                                     caption=league_table['leagueCaption'])
-    matchday = league_table['matchday']
+    #print(league_table)
     for row in league_table['standing']:
         team_name = row['teamName']
+        matchday = row['playedGames']
         team = get_object_or_404(Team, name=team_name, competition=competition)
         position = row['position']
         #print(competition, team, position)
