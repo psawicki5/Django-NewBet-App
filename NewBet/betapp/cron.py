@@ -25,8 +25,3 @@ def update_fixtures_foo():
 def check_fixtures():
     change_status()
     update_fixtures_foo()
-
-
-
-
-

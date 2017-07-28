@@ -428,21 +428,20 @@ def update_odds_in_fixtures(api_id):
         fixture.save()
 
 
-def create_team_standing(competition_id=430):
-    league_table = get_league_table(competition_id)
-    competition = get_object_or_404(Competition,
-                                    caption=league_table['leagueCaption'])
-    #print(league_table)
+def create_team_standing(competition_id):
+    """
+    For given competition downloads current league table and updates team
+    standings
+    :param competition_id: int - competition id in DB
+    :return: None
+    """
+    competition = get_object_or_404(Competition, id=competition_id)
+    league_table = get_league_table(competition.api_id)
     for row in league_table['standing']:
         team_name = row['teamName']
         matchday = row['playedGames']
         team = get_object_or_404(Team, name=team_name, competition=competition)
         position = row['position']
-        #print(competition, team, position)
         list_name = "{}:{}:standing".format(competition.id, team.id)
         if not r.hexists(list_name, matchday):
             r.hset(list_name, matchday, position)
-        #print(len(r.hgetall(list_name)))
-
-
-
