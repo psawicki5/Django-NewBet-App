@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'betapp',
     'kronos',
+    'djcelery'
 
 ]
 
@@ -148,3 +149,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
 REDIS_DB = 0
+
+# Celery
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
