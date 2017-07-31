@@ -1,11 +1,11 @@
 ## NewBetApp
   
 Betting aplication based on Django.   
-Application uses the http://www.football-data.org API server for football data.  
-API provides competitions, teams, fixtures, teams etc.  
+Application uses the http://www.football-data.org API server for football data.
+API provides competitions, teams, fixtures, teams etc.
 Program allows user to bet fixtures. User can bet home win, draw or away win. 
-Program schedules fixtures, automatically checks if fixture have started/finished and  
-calculates bet payout (if bet has been won). Application also calculates odds of fixtures   
+Program schedules fixtures, automatically checks if fixture have started/finished and 
+calculates bet payout (if bet has been won). Application also calculates odds of fixtures
 based on current league table. Odds are recalculated after each matchday.
 Automatic checks are made by means of Celery periodic tasks (also support of Kronos is provided - in cron.py file).
 After making bet, confirmation email is sent to user.
@@ -24,7 +24,7 @@ Steps to setup application:
 * run rabbitmq server
 * start celery worker by typing in manage.py celeryd --verbosity=2
 * start celery beat to register tasks to RabbitMQ by typing in manage.py celerybeat --verbosity=2 
-* runserver Django development server
+* run Django development server
 * login as superuser
 * go to localhost:8000/add_competitions/2017 and check competitions that you want to follow/bet  
 * now you can create app_user using register button and bet fixtures  
