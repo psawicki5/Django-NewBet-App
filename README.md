@@ -5,9 +5,10 @@ Application uses the http://www.football-data.org API server for football data.
 API provides competitions, teams, fixtures, teams etc.  
 Program allows user to bet fixtures. User can bet home win, draw or away win. 
 Program schedules fixtures, automatically checks if fixture have started/finished and  
-calculates bet payout (if bet has benn won). Application also calculates odds of fixtures   
+calculates bet payout (if bet has been won). Application also calculates odds of fixtures   
 based on current league table. Odds are recalculated after each matchday.
-Automatic checks are made by means of Kronos. After making bet, confirmation email is sent to user.
+Automatic checks are made by means of Celery periodic tasks (also support of Kronos is provided - in cron.py file).
+After making bet, confirmation email is sent to user.
 Mail sending was made as a asynchronous task by means of Celery. Also history of teams standings 
 is provided. Standings are stored as dictionary on redis server, and are shared through REST api.
 On basis of standings received from API server, on team details page you can see plot 
@@ -18,9 +19,11 @@ Steps to setup application:
 * in module api_connection.py find function url_conn and assign your key to api_key variable.  
 * migrate db   
 * create superuser  
-* install kronos tasks by typing in ./manage.py installtasks
+* migrate celery tables by typing in manage.py migrate djcelery
 * run redis server
 * run rabbitmq server
+* start celery worker by typing in manage.py celeryd --verbosity=2
+* start celery beat to register tasks to RabbitMQ by typing in manage.py celerybeat --verbosity=2 
 * runserver Django development server
 * login as superuser
 * go to localhost:8000/add_competitions/2017 and check competitions that you want to follow/bet  
