@@ -113,6 +113,17 @@ def calculate_result_odds(balance):
     draw_price = home_draws + away_draws
     away_price = home_losses + away_wins
 
+    # if team price is 0 then assume that probability of given outcome is highly
+    # unlikely
+    if home_price == 0:
+        home_price = 0.1
+
+    if draw_price == 0:
+        draw_price = 0.1
+
+    if away_price == 0:
+        away_price = 0.1
+
     home_win = round(1 / (home_price / sum_of_fixtures), 2)
     draw = round(1 / (draw_price / sum_of_fixtures), 2)
     away_win = round(1 / (away_price / sum_of_fixtures), 2)
